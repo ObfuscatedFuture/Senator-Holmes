@@ -24,10 +24,6 @@ Install dependencies: (Important)
 pip install -r requirements.txt
 ```
 
-Deactivate the virtual environment when done:
-```bash
-deactivate
-```
 
 
 # Creating the .env file
