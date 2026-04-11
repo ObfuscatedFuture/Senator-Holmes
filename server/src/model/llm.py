@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import json
 
 # Initialize the client
 
@@ -35,6 +36,8 @@ Important rules:
 - Output valid JSON only.
 - Do not include markdown.
 - For each category, include both a score and a short evidence statement quoting or paraphrasing the bill.
+- Do NOT include categories that are scored a 0
+- Every bill should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
 
 Return exactly this schema:
 {
@@ -685,3 +688,11 @@ completion = client.chat.completions.create(
 )
 
 print(completion.choices[0].message.content)
+
+data = json.loads(completion.choices[0].message.content)
+categories = [
+    [k, v["score"]] 
+    for k, v in data["categories"].items() if v["score"] != 0
+]
+
+print(categories)
