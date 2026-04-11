@@ -15,10 +15,10 @@ CONGRESS_API_KEY = os.getenv("CONGRESS_API_KEY")
 BASE_URL = "https://api.congress.gov/v3"
 
 # get bills for a specific congress
-@app.get("/bills")
-def get_bills(congress: int = 119, limit: int = 1, offset: int = 500):
+@app.get("/bill/{congress}/{bill_type}")
+def get_bills(congress: int = 119, bill_type: str = "s", limit: int = 500, offset: int = 0):
     response = requests.get(
-        f"{BASE_URL}/bill/{congress}",
+        f"{BASE_URL}/bill/{congress}/{bill_type}",
         params={
             "api_key": CONGRESS_API_KEY,
             "limit": limit,
