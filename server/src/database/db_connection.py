@@ -2,11 +2,13 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
+import certifi
 
 # Loading environement variables
 load_dotenv()
 
-client = MongoClient(os.getenv("MONGODB_URI"), server_api=ServerApi('1'))
+print(os.getenv("MONGODB_URI"))
+client = MongoClient(os.getenv("MONGODB_URI"), tlsCAFile=certifi.where(),server_api=ServerApi('1'))
 
 # Send a ping to confirm a successful connection
 try:
