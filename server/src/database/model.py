@@ -1,28 +1,20 @@
 from pydantic import BaseModel
 
-class Promise(BaseModel):
-    category: str
-    description: str
-
 class Senator(BaseModel):
     state: str
     seniority: int
     name: str
     party: str
-    promises: list[Promise]
-
-class Bill(BaseModel):
-    bill_id: int
-    short_title: str
-    long_title: str
+    promises: list[str]
 
 class CategoryScore(BaseModel):
     category: str
     score: int
 
-class Section(BaseModel):
+class Bill(BaseModel):
     bill_id: int
-    section_id: int
+    short_title: str
+    long_title: str
     text: str
     category_scores: list[CategoryScore]
 
