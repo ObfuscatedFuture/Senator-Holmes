@@ -1,0 +1,158 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+header {
+    text-align: center;
+    padding: 60px 20px 30px;
+}
+
+header h1 {
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+header p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#state-search,
+#results {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+#stateInput {
+    width: 70%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+button {
+    padding: 12px 18px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button:hover {
+    background-color: #357abd;
+}
+
+ul {
+    list-style-position: inside;
+    padding: 0;
+}
+
+/* Score wheel styles */
+#resultBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.senator-card {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    gap: 15px;
+}
+
+.name-block {
+    text-align: center;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 140px;
+}
+
+.senator-headshot {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
+
+.wheel-block {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+}
+
+.wheel-wrap {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: auto;
+}
+
+.score-wheel {
+    transform: rotate(-90deg);
+}
+
+.wheel-bg {
+    fill: none;
+    stroke: #e5e7eb;
+    stroke-width: 18;
+}
+
+.wheel-progress {
+    fill: none;
+    stroke: #22c55e;
+    stroke-width: 18;
+    stroke-linecap: round;
+}
+
+.wheel-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.senator-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #1f2937;
+}
