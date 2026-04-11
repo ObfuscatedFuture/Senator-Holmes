@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Can You Trust Them | Senator Score Breakdown</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="senator-page">
+    <div class="site-shell">
+        <header class="site-header interior-header">
+            <div class="utility-bar">
+                <span class="utility-kicker">Senator breakdown</span>
+            </div>
+
+            <nav class="top-nav" aria-label="Primary">
+                <a class="brand" href="index.html">
+                    <span class="brand-mark">CYTT</span>
+                    <span class="brand-text">
+                        <strong>Can You Trust Them</strong>
+                        <span>Senator search</span>
+                    </span>
+                </a>
+
+                <div class="nav-links">
+                    <a id="backToResultsLink" href="results.html">Back to Results</a>
+                    <a href="index.html">New Search</a>
+                </div>
+            </nav>
+
+            <section class="results-hero senator-hero">
+                <div class="senator-hero-copy">
+                    <p class="eyebrow">Score breakdown</p>
+                    <h1 id="senatorTitle">Loading...</h1>
+                    <p id="senatorSubtitle" class="hero-text">Fetching senator score details.</p>
+                </div>
+            </section>
+        </header>
+
+        <main class="results-main">
+            <section class="senator-detail-layout">
+                <article class="senator-profile-card">
+                    <div class="senator-profile-head">
+                        <img id="senatorHeadshot" class="senator-headshot senator-profile-image" src="assets/placeholder-headshot.svg" alt="Senator headshot">
+                        <div class="senator-profile-meta">
+                            <span class="detail-label">State</span>
+                            <strong id="senatorState" class="senator-profile-state">Loading...</strong>
+                            <p id="senatorBandDetail" class="score-description">Preparing score summary.</p>
+                        </div>
+                    </div>
+
+                    <div class="senator-score-stage">
+                        <div class="senator-score-wheel-wrap">
+                            <svg class="score-wheel" width="220" height="220" viewBox="0 0 220 220" aria-hidden="true">
+                                <circle class="wheel-bg senator-wheel-bg" cx="110" cy="110" r="85"></circle>
+                                <circle id="senatorWheelProgress" class="wheel-progress senator-wheel-progress" cx="110" cy="110" r="85"></circle>
+                            </svg>
+                            <div id="senatorWheelCenter" class="senator-wheel-center">0</div>
+                            <div id="senatorWheelLabel" class="senator-wheel-label">Trust score</div>
+                        </div>
+                    </div>
+                </article>
+
+                <section class="breakdown-panel">
+                    <div class="breakdown-grid" id="breakdownGrid"></div>
+                    <article class="methodology-note">
+                        <span class="detail-label">Interpretation note</span>
+                        <p id="methodologyCopy">
+                            This page summarizes the currently stored score and places it in context using the existing dataset.
+                        </p>
+                    </article>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/senator.js"></script>
+</body>
+</html>

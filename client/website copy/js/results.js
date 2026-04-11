@@ -72,7 +72,16 @@ function createDetailCard(label, value) {
     return detailCard;
 }
 
-function createScoreWheel(score, senatorName, delay = 0) {
+function buildSenatorDetailUrl(state, senatorName) {
+    const params = new URLSearchParams({
+        state,
+        senator: senatorName
+    });
+
+    return `senator.html?${params.toString()}`;
+}
+
+function createScoreWheel(score, senatorName, state, delay = 0) {
     const radius = 50;
     const circumference = 2 * Math.PI * radius;
     const scoreBand = getScoreBand(score);
@@ -98,12 +107,13 @@ function createScoreWheel(score, senatorName, delay = 0) {
     };
     testImg.src = headshotSrc;
 
-    const nameDiv = document.createElement("div");
-    nameDiv.className = "senator-name";
-    nameDiv.textContent = senatorName;
+    const nameLink = document.createElement("a");
+    nameLink.className = "senator-name senator-name-link";
+    nameLink.href = buildSenatorDetailUrl(state, senatorName);
+    nameLink.textContent = senatorName;
 
     nameBlock.appendChild(headshotImg);
-    nameBlock.appendChild(nameDiv);
+    nameBlock.appendChild(nameLink);
 
     const scoreCopy = document.createElement("div");
     scoreCopy.className = "score-copy";
@@ -242,7 +252,7 @@ async function loadResults() {
         }));
 
         normalizedSenators.forEach((senator, index) => {
-            const wheelCard = createScoreWheel(senator.score, senator.name, index * 220);
+            const wheelCard = createScoreWheel(senator.score, senator.name, state, index * 220);
             resultBox.appendChild(wheelCard);
         });
     } catch (error) {
