@@ -4,7 +4,7 @@ from fastapi import FastAPI
 import requests
 import os
 
-from src.router.bills import create_bill
+from src.database.bills import create_bill
 from src.database.model import Bill, CategoryScore
 from src.analysis.llm_validation import validate_bill_classification
 from src.analysis.llm import BillAnalyzer
@@ -16,7 +16,7 @@ BASE_URL = "https://api.congress.gov/v3"
 
 # get bills for a specific congress
 @app.get("/bills")
-def get_bills(congress: int = 119, limit: int = 500, offset: int = 0):
+def get_bills(congress: int = 119, limit: int = 1, offset: int = 500):
     response = requests.get(
         f"{BASE_URL}/bill/{congress}",
         params={
