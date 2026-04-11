@@ -17,3 +17,13 @@ print("****Jim Justice's Promises*****")
 jimjusticepage = find_promises_page("https://jimjusticewv.com")
 jimjustice = cs.scrape_promises_linked_pages(jimjusticepage)
 for x in jimjustice: print(x)
+
+def try_and_print_promises(url):
+    senator = cs.scrape_promises_linked_pages(url)
+    for x in senator: print(x)
+
+print("****Lisa Blunt Rochester's Promises*****")
+try_and_print_promises("https://lisabluntrochester.com/issues")
+print("\n\n\n")
+
+try_and_print_promises("https://gallegoforarizona.com/issues/")
