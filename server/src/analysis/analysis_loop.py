@@ -1,14 +1,13 @@
 ## This should do the full llm.py loop with all bills + the validation step
-import llm_validation
-import llm
-import json
-import json
+
 from fastapi import FastAPI
 import requests
 import os
-from src.database.model import *
-from router.bills import *
 
+from src.router.bills import create_bill
+from src.database.model import Bill, CategoryScore
+from src.analysis.llm_validation import validate_bill_classification
+from src.analysis.llm import BillAnalyzer
 
 app = FastAPI()
 
@@ -17,7 +16,7 @@ BASE_URL = "https://api.congress.gov/v3"
 
 # get bills for a specific congress
 @app.get("/bills")
-def get_bills(congress: int = 119, limit: int = 1, offset: int = 0):
+def get_bills(congress: int = 119, limit: int = 500, offset: int = 0):
     response = requests.get(
         f"{BASE_URL}/bill/{congress}",
         params={
@@ -57,26 +56,27 @@ def get_bill_text_clean(congress: int, bill_type: str, bill_number: int):
 
 response = get_bills()
 bills =  response['bills']
-BillAnalyzer = llm.BillAnalyzer()
+BA = BillAnalyzer()
 
 for bill in bills:
     bill_id = bill['number']
     bill_type = bill['type']
     bill_text = get_bill_text_clean(congress= 119, bill_type= bill_type, bill_number=bill_id)
-    json_from_llm = BillAnalyzer.llm_analysis(bill_text)
-    validated_json = llm_validation.validate_bill_classification(json_from_llm)
+    json_from_llm = BA.llm_analysis(bill_text)
+    validated_json = validate_bill_classification(json_from_llm)
     if validated_json is None:
         print("Validation failed must retry")
     else:
         data = validated_json.model_dump()
+
         categories = [
-        [k, v["score"]] 
-        for k, v in data["categories"].items() if v is not None and v["score"] != 0
+            new_category := CategoryScore(category=k, score=v["score"]) for k, v in data["categories"].items() if v is not None and v["score"] != 0
         ]
+        print("\n categories", categories)
         new_bill = Bill(
-            bill_id= bill_id
-            title= bill['title']
-            text = bill_text
-            category_scores= categories
+            bill_id=bill_id,
+            title=bill['title'],
+            text=bill_text,
+            category_scores=categories
         )
         create_bill(new_bill)

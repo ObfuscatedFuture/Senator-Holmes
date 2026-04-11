@@ -4,6 +4,9 @@ from src.database.model import Bill
 def create_bill(bill: Bill) -> int:
     bill_data = bill.model_dump(by_alias=True, exclude_none=True)
     bills_collection = get_collection("Bill")
+    if (get_bill_score(bill.bill_id) != []):
+        print(f"Bill with ID {bill.bill_id} already exists.")
+        return -1
     try: 
         bills_collection.insert_one(bill_data)
     except Exception as e:
