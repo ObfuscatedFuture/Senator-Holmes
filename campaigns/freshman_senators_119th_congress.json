@@ -1,30 +1,5 @@
 [
   {
-    "name": "Angela Alsobrooks",
-    "state": "Maryland",
-    "seniority": "junior",
-    "party": "Democrat",
-    "campaign_website": "https://www.angelaalsobrooks.com/priorities",
-    "promises": [
-      "Abortion",
-      "Agriculture",
-      "Climate Change",
-      "Education",
-      "Equality",
-      "Gun Safety",
-      "Health Care",
-      "Immigration",
-      "National Security and Foreign Policy",
-      "Protecting the Chesapeake Bay",
-      "Public Safety and Criminal Justice Reform",
-      "Seniors",
-      "Standing up for Workers",
-      "The Economy",
-      "Veterans",
-      "Voting Rights and Protecting Democracy"
-    ]
-  },
-  {
     "name": "Jim Banks",
     "state": "Indiana",
     "seniority": "junior",
@@ -44,29 +19,6 @@
     ]
   },
   {
-    "name": "Lisa Blunt Rochester",
-    "state": "Delaware",
-    "seniority": "junior",
-    "party": "Democrat",
-    "campaign_website": "https://lisabluntrochester.com/issues/",
-    "promises": [
-      "Agriculture",
-      "Bipartisanship and Working Together",
-      "Climate",
-      "Democracy & Voting Rights",
-      "Economy",
-      "Education",
-      "Gun Violence Prevention",
-      "Health Care",
-      "Immigration",
-      "Innovation and Emerging Technology",
-      "LGBTQIA+ Rights",
-      "Public Safety & Justice Reform",
-      "Reproductive Freedom",
-      "Veterans"
-    ]
-  },
-  {
     "name": "John Curtis",
     "state": "Utah",
     "seniority": "junior",
@@ -79,29 +31,6 @@
       "John has done more to support U.S. oil and gas than any other member of Congress. John is fighting to make the U.S. not just energy independent, but energy dominant. In the Senate, John will push for a tariff on China, forcing them to pay for their pollution and level the playing field for Utah businesses that are doing things the right way.",
       "John is a pro-life, pro-Second Amendment, fiscal conservative who is committed to cutting Biden's reckless spending. In the U.S. Senate, John will continue to stand by these Utah values.",
       "Business and innovation are key to future economic growth. Digital assets and crypto currency both play an important role. John has been proud to support these industries in Congress, and will continue to work hard to make sure those in Silicon Slopes and throughout Utah have the certainty from the government they need. He will continue this critical work in the Senate."
-    ]
-  },
-  {
-    "name": "Ruben Gallego",
-    "state": "Arizona",
-    "seniority": "junior",
-    "party": "Democrat",
-    "campaign_website": "https://gallegoforarizona.com/issues/",
-    "promises": [
-      "Abortion",
-      "Arizona Families",
-      "Economy",
-      "Education",
-      "Environment & Climate Change",
-      "Health Care",
-      "Immigration",
-      "Inflation",
-      "LGBTQ+",
-      "National Security",
-      "Protecting Arizona's Water",
-      "Tribal Communities",
-      "Veterans",
-      "Voting Rights and Democracy"
     ]
   },
   {
@@ -186,27 +115,6 @@
     ]
   },
   {
-    "name": "Jim Justice",
-    "state": "West Virginia",
-    "seniority": "junior",
-    "party": "Republican",
-    "campaign_website": "https://jimjusticewv.com/issues/",
-    "promises": [
-      "ECONOMY & JOBS",
-      "ENERGY",
-      "INFLATION",
-      "STRENGTHEN THE BORDER",
-      "PRO-LIFE CHAMPION",
-      "SECOND AMENDMENT",
-      "CONSERVATIVE JUDGES",
-      "KEEPING OUR PROMISE TO SENIORS",
-      "CRIME, LAW, AND ORDER",
-      "HEALTH CARE",
-      "EDUCATION",
-      "PEACE THROUGH STRENGTH"
-    ]
-  },
-  {
     "name": "Jon Husted",
     "state": "Ohio",
     "seniority": "junior",
@@ -237,19 +145,6 @@
       "Protect Families, Parental Rights, and American Values: Stop government overreach in education, defend free speech, gun rights, and religious liberty. Give parents more control over their children's education and push back against radical social agendas in schools.",
       "Restore Fiscal Discipline and Stop Washington's Waste: Balance the budget, eliminate reckless government spending, and cut foreign aid that doesn't serve American interests. Hold Washington accountable and prioritize economic policies that put taxpayers first. Let DOGE examine every bit of our federal government.",
       "Strengthen the Military and Defend American Sovereignty: Invest in the strongest, most advanced military in the world while avoiding endless wars. Stop funding global organizations that undermine U.S. interests and refocus national defense on protecting American borders and strategic assets."
-    ]
-  },
-  {
-    "name": "Adam Schiff",
-    "state": "California",
-    "seniority": "junior",
-    "party": "Democrat",
-    "campaign_website": "https://www.adamschiff.com/plans/",
-    "promises": [
-      "Defending Democracy",
-      "Affordability Agenda",
-      "Housing and Homelessness",
-      "Protecting our Planet"
     ]
   },
   {
