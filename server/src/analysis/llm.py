@@ -145,13 +145,6 @@ class BillAnalyzer:
                 {"role": "user", "content": prompt}
             ]
         )
-        # Please comment this code idk what it does
-        data = json.loads(completion.choices[0].message.content)
-        categories = [
-            [k, v["score"]] 
-            for k, v in data["categories"].items() if v["score"] != 0
-        ]
-
-        print(categories)
+        
         return completion.choices[0].message.content
 
