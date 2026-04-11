@@ -16,12 +16,15 @@ class Bill(BaseModel):
     short_title: str
     long_title: str
 
+class CategoryScore(BaseModel):
+    category: str
+    score: int
+
 class Section(BaseModel):
     bill_id: int
     section_id: int
     text: str
-    category: str
-    score: int
+    category_scores: list[CategoryScore]
 
 class Vote(BaseModel):
     bill_id: int
