@@ -1,15 +1,19 @@
 import re
 
 from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen, build_opener, urlretrieve, install_opener
+from urllib.request import Request, urlopen
+from requests import get
 
 def find_promises_page(homeurl):
     request = Request(homeurl)
     request.add_header("User-Agent",
                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15")
+    return f"{homeurl}/issues"
+
     with urlopen(request) as response:
         soup = BeautifulSoup(response, "html.parser")
         promise_heading = soup.body.find("h1", string=re.compile("Day One Promises"))
+
 
 def scrape_promises_single_page(url):
     request = Request(url)
