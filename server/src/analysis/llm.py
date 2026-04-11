@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from pydantic import json
 
 # Initialize the client
 
@@ -39,93 +40,76 @@ class BillAnalyzer:
         - Output valid JSON only.
         - Do not include markdown.
         - For each category, include both a score and a short evidence statement quoting or paraphrasing the bill.
+        - Do NOT include categories that are scored a 0
+        - Every bill should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
 
         Return exactly this schema:
         {{
         "bill_title": "string",
         "categories": {{
             "abortion": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "affirmative_action": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "balanced_budget_vs_expand_spending": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "citizenship_pathways": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "clean_energy_vs_fossil_fuels": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "corporate_tax_rates": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "crypto_gambling_corruption_regulation": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "executive_power_limits": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "foreign_aid_vs_isolationism": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "free_trade_vs_isolationism": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "gun_control": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "immigration_border_wall_deportations": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "israel_vs_palestine": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "medicaid_cuts_vs_expansion": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "minimum_wage": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "obamacare_repeal_vs_expansion": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "same_sex_marriage": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "stock_trading_restrictions": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "vaccines_public_health_vs_health_skepticism": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }},
             "voter_id_and_election_restrictions": {{
-            "score": 0,
-            "evidence": "string"
+            "score": 0
             }}
         }}
         }}
+
 
         Category definitions:
         - abortion: -2 = restricts abortion access, 2 = expands abortion access
@@ -149,6 +133,7 @@ class BillAnalyzer:
         - corporate_tax_rates: -2 = lowers corporate taxes, 2 = raises corporate taxes
         - stock_trading_restrictions: -2 = opposes restrictions on officeholders trading, 2 = imposes stronger trading bans or disclosure rules
 
+
         Here is the bill text:
         {bill_text}
         """
@@ -160,5 +145,13 @@ class BillAnalyzer:
                 {"role": "user", "content": prompt}
             ]
         )
+        # Please comment this code idk what it does
+        data = json.loads(completion.choices[0].message.content)
+        categories = [
+            [k, v["score"]] 
+            for k, v in data["categories"].items() if v["score"] != 0
+        ]
+
+        print(categories)
         return completion.choices[0].message.content
 
