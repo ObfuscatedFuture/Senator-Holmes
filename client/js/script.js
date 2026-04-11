@@ -1,3 +1,5 @@
+import API_BASE from "./config.js";
+
 const validStates = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
     "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
@@ -9,15 +11,29 @@ const validStates = [
     "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
 ];
 
-function searchState() {
+async function searchState() {
     const state = document.getElementById("stateInput").value.trim();
 
     if (!validStates.includes(state)) {
         alert("Please enter a valid U.S. state.");
         return;
     }
+    try {
+        const response = await fetch(`${API_BASE}/state/${encodeURIComponent(state)}`);
+        if (!response.ok) {
+            throw new Error("API request failed");
+        }
+        const data = await response.json();
 
-    window.location.href = `results.html?state=${encodeURIComponent(state)}`;
+        console.log(data);
+
+        // Example: display result on page
+        document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+
+    } catch (error) {
+        console.error(error);
+        alert("Error calling API");
+    }
 }
 
 document.getElementById("searchButton").addEventListener("click", searchState);
