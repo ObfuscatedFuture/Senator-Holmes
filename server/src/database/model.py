@@ -5,6 +5,7 @@ class Senator(BaseModel):
     seniority: int
     name: str
     party: str
+    campaign_website: str
     promises: list[str]
 
 class CategoryScore(BaseModel):
@@ -13,8 +14,7 @@ class CategoryScore(BaseModel):
 
 class Bill(BaseModel):
     bill_id: int
-    short_title: str
-    long_title: str
+    title: str
     text: str
     category_scores: list[CategoryScore]
 
