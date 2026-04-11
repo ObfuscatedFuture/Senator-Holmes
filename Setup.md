@@ -30,3 +30,7 @@ deactivate
 ```
 
 
+# Creating the .env file
+Create a .env file in /server
+Add the env variables as written in the doc
+then use env variables like: API_KEY = os.getenv("OPENROUTER_API_KEY")
