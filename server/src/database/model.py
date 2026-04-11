@@ -22,4 +22,4 @@ class Vote(BaseModel):
     bill_id: int
     state: str
     seniority: int
-    vote: str
+    vote: int
