@@ -8,26 +8,26 @@ class CategoryScore(BaseModel):
 
 
 class Categories(BaseModel):
-    abortion: CategoryScore
-    affirmative_action: CategoryScore
-    balanced_budget_vs_expand_spending: CategoryScore
-    citizenship_pathways: CategoryScore
-    clean_energy_vs_fossil_fuels: CategoryScore
-    corporate_tax_rates: CategoryScore
-    crypto_gambling_corruption_regulation: CategoryScore
-    executive_power_limits: CategoryScore
-    foreign_aid_vs_isolationism: CategoryScore
-    free_trade_vs_isolationism: CategoryScore
-    gun_control: CategoryScore
-    immigration_border_wall_deportations: CategoryScore
-    israel_vs_palestine: CategoryScore
-    medicaid_cuts_vs_expansion: CategoryScore
-    minimum_wage: CategoryScore
-    obamacare_repeal_vs_expansion: CategoryScore
-    same_sex_marriage: CategoryScore
-    stock_trading_restrictions: CategoryScore
-    vaccines_public_health_vs_health_skepticism: CategoryScore
-    voter_id_and_election_restrictions: CategoryScore
+    abortion: Optional[CategoryScore] = None
+    affirmative_action: Optional[CategoryScore] = None
+    balanced_budget_vs_expand_spending: Optional[CategoryScore] = None
+    citizenship_pathways: Optional[CategoryScore] = None
+    clean_energy_vs_fossil_fuels: Optional[CategoryScore] = None
+    corporate_tax_rates: Optional[CategoryScore] = None
+    crypto_gambling_corruption_regulation: Optional[CategoryScore] = None
+    executive_power_limits: Optional[CategoryScore] = None
+    foreign_aid_vs_isolationism: Optional[CategoryScore] = None
+    free_trade_vs_isolationism: Optional[CategoryScore] = None
+    gun_control: Optional[CategoryScore] = None
+    immigration_border_wall_deportations: Optional[CategoryScore] = None
+    israel_vs_palestine: Optional[CategoryScore] = None
+    medicaid_cuts_vs_expansion: Optional[CategoryScore] = None
+    minimum_wage: Optional[CategoryScore] = None
+    obamacare_repeal_vs_expansion: Optional[CategoryScore] = None
+    same_sex_marriage: Optional[CategoryScore] = None
+    stock_trading_restrictions: Optional[CategoryScore] = None
+    vaccines_public_health_vs_health_skepticism: Optional[CategoryScore] = None
+    voter_id_and_election_restrictions: Optional[CategoryScore] = None
 
     model_config = ConfigDict(extra="forbid")
 
@@ -69,11 +69,15 @@ data = {
     }
 }
 
-try:
-    validated = BillClassification.model_validate(data)
-    print("Valid JSON")
-    print(validated.model_dump())
-except ValidationError as e:
-    print("Validation failed")
-    #TODO: Rerun LLM and hope it works on the second time (if it fails again give up)
-    print(e)
+def validate_bill_classification(data):
+    try:
+        validated = BillClassification.model_validate_json(data)
+        print("Valid JSON")
+        print(validated.model_dump())
+        return validated
+        
+    except ValidationError as e:
+        print(e)
+        return None
+        #TODO: Rerun LLM and hope it works on the second time (if it fails again give up)
+        
