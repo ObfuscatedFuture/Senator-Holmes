@@ -39,8 +39,8 @@ class BillAnalyzer:
         - If a category is not clearly addressed, return 0.
         - Output valid JSON only.
         - Do not include markdown.
-        - For each category, include both a score and a short evidence statement quoting or paraphrasing the bill.
-        - Do NOT include categories that are scored a 0
+        - For each category, only include a score
+        - Do NOT include categories that are scored a 0 or are None type
         - Every bill should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
 
         Return exactly this schema:
