@@ -4,8 +4,9 @@ import llm
 import json
 import json
 
-f = open('test_bill.txt')
+f = open('server/src/analysis/test_bill.txt', 'r')
 bill_text_sample = f.read()
+f.close()
 
 # Initialize the BillAnalyzer
 BillAnalyzer = llm.BillAnalyzer()
