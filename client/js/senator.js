@@ -1,12 +1,4 @@
-function getHeadshotSrc(senatorName) {
-    const filename = senatorName
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
 
-    return `assets/senators/${filename}.jpg`;
-}
 
 function getScoreBand(score) {
     if (score < 40) {
@@ -139,7 +131,6 @@ async function loadSenatorDetails() {
         senatorState.textContent = senator.state;
         senatorBandDetail.textContent = scoreBand.detail;
 
-        const headshotSrc = getHeadshotSrc(senator.name);
         const testImg = new Image();
         testImg.onload = () => {
             senatorHeadshot.src = headshotSrc;
