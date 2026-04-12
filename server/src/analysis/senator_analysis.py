@@ -102,7 +102,7 @@ def get_rep_votes_for_bill(bill_number: str, state: str = "US"):
             continue
 
         chamber = roll_call.get("chamber")
-        if chamber != "H":
+        if chamber != "S":
             continue
 
         senators = []
@@ -134,13 +134,3 @@ def get_rep_votes_for_bill(bill_number: str, state: str = "US"):
     most_recent = sorted(senate_votes, key=lambda v: v["date"], reverse=True)[0]
     return most_recent
 
-
-
-# usage
-result = get_rep_votes_for_bill("District of Columbia Appropriations Act, 2026 Judiciary Appropriations Act, 2026 Executive Office of the President Appropriations Act, 2026 Department of the Treasury Appropriations Act, 2026 Transportation, Housing and Urban Development, and Related Agencies Appropriations Act, 2026 Department of Transportation Appropriations Act, 2026 Department of Defense Appropriations Act, 2026 Further Continuing Appropriations Act, 2026 Financial Services and General Government Appropriations Act, 2026 Department of Health and Human Services Appropriations Act, 2026 Department of Education Appropriations Act, 2026 Department of Housing and Urban Development Appropriations Act, 2026 National Security, Department of State, and Related Programs Appropriations Act, 2026 Department of Labor Appropriations Act, 2026 Departments of Labor, Health and Human Services, and Education, and Related Agencies Appropriations Act, 2026", state="US")
-
-if result:
-    print(f"\n{result['description']} ({result['date']})")
-    print(f"Yea: {result['yea']} | Nay: {result['nay']}")
-    for senator in result["senators"]:
-        print(f"  {senator['name']}: {senator['vote']}")

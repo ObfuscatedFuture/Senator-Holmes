@@ -30,7 +30,7 @@ def get_bill_text_clean(congress: int, bill_type: str, bill_number: int):
     response = requests.get(htm_url)
     return response.text
 
-def get_congress_bills(congress: int = 119, limit: int = 1, offset: int = 0):
+def get_congress_bills(congress: int = 119, limit: int = 749, offset: int = 251):
     response = requests.get(
         f"{BASE_URL}/bill/{congress}",
         params={
@@ -46,13 +46,15 @@ BA = BillAnalyzer()
 
 response = get_congress_bills()
 bills = response['bills']
-
+i = 251
 for bill in bills:
+    print(i)
+    i += 1
     bill_number = bill['number']
     bill_type = bill['type']
     bill_title = bill['title']
 
-    print(f"\nProcessing: {bill_type}{bill_number} - {bill_title}")
+    #print(f"\nProcessing: {bill_type}{bill_number} - {bill_title}")
 
     # step 1 - check if bill has senate voting data in legiscan
     # format bill number for legiscan e.g. "S1", "HR42"
@@ -61,7 +63,7 @@ for bill in bills:
     senate_vote = get_rep_votes_for_bill(legiscan_bill_number, state="US")
     
     if not senate_vote:
-        print(f"No senate vote found for {legiscan_bill_number}, skipping...")
+        #print(f"No senate vote found for {legiscan_bill_number}, skipping...")
         continue
 
     print(f"Senate vote found: {senate_vote['description']} ({senate_vote['date']})")
@@ -69,7 +71,7 @@ for bill in bills:
     # step 2 - get bill text
     bill_text = get_bill_text_clean(congress=119, bill_type=bill_type, bill_number=bill_number)
     if not bill_text:
-        print(f"No text found for {legiscan_bill_number}, skipping...")
+        #print(f"No text found for {legiscan_bill_number}, skipping...")
         continue
 
     # step 3 - run LLM analysis
@@ -77,7 +79,7 @@ for bill in bills:
     validated_json = validate_bill_classification(json_from_llm)
 
     if validated_json is None:
-        print("Validation failed, skipping...")
+        #print("Validation failed, skipping...")
         continue
 
     # step 4 - save to database
