@@ -56,7 +56,7 @@ class CampaignScraper:
             return []
         for link in promises_html:
             if urlparse(link['href']).hostname != overview_hostname:
-                pass
+                continue
             subpage_link = self.scrape_promise_single_page(link['href'])
             promises.append(subpage_link)
 

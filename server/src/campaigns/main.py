@@ -4,7 +4,7 @@ cs = CampaignScraper()
 
 print("*****Dave McCormick's Promises******")
 cs.try_and_print_promises("https://www.davemccormickpa.com/day-one-promises/")
-
+#
 # print("*****Angela Alsobrooks's Promises*****")
 # cs.try_and_print_promises("https://www.angelaalsobrooks.com/priorities")
 
@@ -24,21 +24,25 @@ print("Gallego's Promises's*****")
 cs.try_and_print_promises("https://gallegoforarizona.com/issues/")
 ################
 
+print("Bernie Moreno's Promises")
+cs.try_and_print_promises("https://berniemoreno.com/about/")
 
-cs.try_and_print_promises("https://berniemoreno.com/")
+print("Tim Formt")
+cs.try_and_print_promises("https://timformt.com/meet-tim/")
 
-cs.try_and_print_promises("https://timformt.com/")
-
+print("Elissa Slotkin")
 cs.try_and_print_promises("https://elissaslotkin.org/priorities/")
 
-cs.try_and_print_promises("https://jimjusticewv.com/issues/")
-
+print("Jon Husted")
 cs.try_and_print_promises("https://www.jonhustedforsenate.com/")
 
+print("Ashley Moody")
 cs.try_and_print_promises("https://ashleymoody.com/priorities/")
 
+print("Adam Schiff")
 cs.try_and_print_promises("https://www.adamschiff.com/plans/")
 
+print("Andy Kim")
 cs.try_and_print_promises("https://www.andykim.com/issues/")
 
 

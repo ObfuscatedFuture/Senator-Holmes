@@ -23,7 +23,7 @@ class CampaignPromiseRetriever:
     def llm_analysis(self, campaign_promises):
         prompt = f"""
             You are scoring the campaign promise websites of sitting U.S. senators in their first terms. 
-            Provide a JSON  
+            Provide a JSON 
             
             Scoring rules:
             -2 = strongly favors the first side listed in the category definition
