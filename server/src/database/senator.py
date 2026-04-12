@@ -6,6 +6,9 @@ def create_senator(senator: Senator) -> int:
     senator_data = senator.model_dump(by_alias=True, exclude_none=True)
     senators_collection = get_collection("Senator")
     try: 
+        if get_senator(senator.state, senator.seniority):
+            print(f"Senator with state: {senator.state} and seniority: {senator.seniority} already exists.")
+            return -1
         senators_collection.insert_one(senator_data)
     except Exception as e:
         print(f"Error occurred while inserting senator: {e}")
