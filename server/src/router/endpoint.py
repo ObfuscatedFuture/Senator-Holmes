@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import os
+import requests
 from src.database.senator import get_senator, get_senator_score
 
 
@@ -19,6 +21,21 @@ class scoreData(BaseModel):
     category: str
     score: float
 class SenatorData(BaseModel):
+    state: str
+    name: str
+    party: str
+    image_url: str
+    trust_score: float
+class StateData(BaseModel):
+    state: str
+    senators: list[SenatorData]
+
+congress_key = os.getenv("CONGRESS_API_KEY")
+
+@app.get("/state/{state}")
+def get_senators(state: str):
+    response = requests.get(f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}")
+    return response.json().members.filter(lambda rep: "district" in rep)
     state: str #
     name: str #
     party: str #
@@ -32,13 +49,13 @@ def get_senator(senator_name: str):
     senator_data = get_senator(name=senator_name)
     if senator_data is None:
         return {"message": f"Its fucked: {senator_name}"}
-    
+
     seniority = int(senator_data['seniority'])
     state = senator_data['state']
     category_scores = get_senator_score(state, seniority)
     if category_scores is None:
         return {"message": f"Its fucked: {senator_name}"}
-    
+
     s = SenatorData(
         state=state,
         name=senator_data['name'],

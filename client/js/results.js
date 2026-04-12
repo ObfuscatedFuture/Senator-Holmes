@@ -211,7 +211,7 @@ function renderEmptyState(resultBox, message) {
     resultBox.appendChild(emptyState);
 }
 
-async function loadResults() {
+async function loadStateResults() {
     const params = new URLSearchParams(window.location.search);
     const state = params.get("state");
 
@@ -230,7 +230,7 @@ async function loadResults() {
     stateSubtitle.textContent = "Review currently available senator score cards and compare the listed results at a glance.";
 
     try {
-        const response = await fetch("data/senators.json");
+        const response = await fetch(`/state/${state}`);
 
         if (!response.ok) {
             throw new Error("Could not load senator data.");
@@ -261,4 +261,4 @@ async function loadResults() {
     }
 }
 
-loadResults();
+loadStateResults();
