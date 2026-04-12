@@ -65,7 +65,7 @@ async function loadSenatorDetails() {
         nameBlock.className = "name-block";
 
         const headshotImg = document.createElement("img");
-        headshotImg.src = senator["depiction"]?.["imageUrl"] || "assets/placeholder-headshot.svg";
+        headshotImg.src = senator["headshot"] || "assets/placeholder-headshot.svg";
         headshotImg.alt = `${senator.name} headshot`;
         headshotImg.className = "senator-headshot";
 
