@@ -45,11 +45,6 @@ def get_senators(state: str):
     response = requests.get(
         f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}")
     return response.json().members.filter(lambda rep: "district" in rep)
-    state: str  #
-    name: str  #
-    party: str  #
-    overall_score: float
-    category_scores: list[ScoreData]
 
 
 # TODO: Add the endpoint with more info (like per category scores)
