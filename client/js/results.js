@@ -156,6 +156,7 @@ async function loadStateResults() {
     try {
         const response = await fetch(`${API_BASE}/states/${encodeURIComponent(stateCode)}`);
 
+
         if (!response.ok) {
             throw new Error("Could not load senator data.");
         }
