@@ -17,10 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# "html=True" automatically serves index.html at the root of the mount path
-app.mount("/", StaticFiles(directory="../client", html=True), name="static")
-
-
 
 class ScoreData(BaseModel):
     category: str
@@ -43,7 +39,7 @@ class StateData(BaseModel):
 
 congress_key = os.getenv("CONGRESS_API_KEY")
 
-
+#TODO: This is slop response.json() returns a dict so .members doesnt work
 @app.get("/state/{state}")
 def get_senators(state: str):
     response = requests.get(
@@ -58,7 +54,7 @@ def get_senators(state: str):
 
 # TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
-def get_senator(senator_name: str):
+def get_senator_by_name(senator_name: str):
     senator_data = get_senator(name=senator_name)
     if senator_data is None:
         return {"message": f"Its fucked: {senator_name}"}
@@ -79,3 +75,6 @@ def get_senator(senator_name: str):
     )
 
     return s
+
+# "html=True" automatically serves index.html at the root of the mount path
+app.mount("/", StaticFiles(directory="../client", html=True), name="static")
