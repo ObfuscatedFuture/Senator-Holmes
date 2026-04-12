@@ -43,15 +43,22 @@ congress_key = os.getenv("CONGRESS_API_KEY")
 @app.get("/states/{state}")
 def get_senators(state: str):
     response = requests.get(
-        f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}")
-    members = response.json()['members']
-    senators = filter(lambda x:"district" not in x, members)
-    mapped = map(lambda x: {
-        **x,
-        'score': random.randint(1, 100)
-    }, senators)
-    return list(mapped)
+        f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}"
+    )
+    members = response.json()["members"]
+    senators = [m for m in members if "district" not in m]
 
+    return [
+        {
+            **senator,
+            "score": (
+                sum(cs.score for cs in s.category_scores) / len(s.category_scores)
+                if (s := get_senator_by_name(senator["name"])) and s.category_scores
+                else None
+            )
+        }
+        for senator in senators
+    ]
 
 # TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
