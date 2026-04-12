@@ -189,12 +189,12 @@ class Categories(BaseModel):
     vaccines_public_health_vs_health_skepticism: Optional[ScoreEvidence] = None
     voter_id_and_election_restrictions: Optional[ScoreEvidence] = None
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict()
 
 
 class SenatorClassification(BaseModel):
     senator_name: str
     categories: Categories
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict()
 

@@ -19,27 +19,39 @@ class CampaignScraper:
         :param url:
         :return:
         """
+
         soup = self.construct_soup(url)
         query = ", ".join([f"{header} + * p" for header in header_tags])
-        return "\n".join(map(lambda x: x.get_text(), soup.body.select(query)))
+        query += ", main p"
+        try:
+            els = soup.body.select(query)
+            if soup is None or els is None:
+                print("Exiting early due to improper select: ", query)
+                return None
+            return "\n".join(map(lambda x: x.get_text(), els))
+        except:
+            print("Exception occurred with query", query)
+            return None
 
 
     def scrape_promises_single_page(self, url):
         soup = self.construct_soup(url)
         promises = []
 
-        list_html = soup.body.select("header + * ol,header + * ul")
+        list_html = soup.body.select("header + * ol,header + * ul, main ol, main ul")
         if len(list_html) > 0:      # If the structure was li, don't add extraneous promises
             for promise in list_html:
                 for x in promise.find_all("li"):
                     promises.append(x.get_text())
             return promises
 
-        p_html = soup.body.select("header + * p")
+        p_html = soup.body.select("header + * p, main p")
         for promise in p_html:
             promises.append(promise.get_text())
 
         return promises
+
+    max_required_links = 3
 
     def scrape_promises_linked_pages(self, overview):
         """
@@ -53,18 +65,22 @@ class CampaignScraper:
         promises = []
         soup = self.construct_soup(overview)
 
-        promises_html = soup.body.select("header + * a, div[class*='header'] + * a")
+        promises_html = soup.body.select("header + * a, div[class*='header'] + * a, main a")
         overview_hostname = urlparse(overview).hostname
         overview_scheme = urlparse(overview).scheme # Should always be https
-        if len(promises_html) < 5:
+        if len(promises_html) < self.max_required_links:
             return []
         for link in promises_html:
+            if "href" not in link:
+                continue
             parsed = urlparse(link['href'])
             if parsed.scheme == "":
                 link['href'] = f'{overview_scheme}://{overview_hostname}{parsed.path}'
             elif parsed.hostname != overview_hostname:
                 continue
             subpage_link = self.scrape_promise_single_page(link['href'])
+            if subpage_link is None:
+                continue
             promises.append(subpage_link)
 
         return promises
