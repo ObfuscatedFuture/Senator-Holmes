@@ -10,7 +10,7 @@ class Senator(BaseModel):
 
 class CategoryScore(BaseModel):
     category: str
-    score: int
+    score: float
 
 class Bill(BaseModel):
     bill_id: int

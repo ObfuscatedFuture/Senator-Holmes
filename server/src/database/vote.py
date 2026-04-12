@@ -19,13 +19,36 @@ def get_senator_vote(state: str, seniority: int) -> list[CategoryScore]:
         if votes is None:
             print(f"No votes found with state: {state} and seniority: {seniority}")
             return None
-        # Doesn't work right now
+        
         for vote in votes:
             vote_weight = vote.get("vote")
             bill = get_bill(vote.get("bill_id"))
             if bill is None:
                 print(f"No bill found with bill_id: {vote.get('bill_id')}")
                 continue
+
+            category_totals: dict[str, dict[str, float]] = {}
+
+            for category_score in bill.get("category_scores"):
+                category = category_score.get("category")
+                score = category_score.get("score")
+                if category is None or score is None:
+                    continue
+
+                if category not in category_totals:
+                    category_totals[category] = {"weighted_sum": 0.0, "count": 0.0}
+
+                category_totals[category]["weighted_sum"] += float(score) * float(vote_weight)
+                category_totals[category]["count"] += 1.0
+            
+        average_scores: list[CategoryScore] = []
+        for category, totals in category_totals.items():
+            if totals["count"] == 0:
+                continue
+            average_score = totals["weighted_sum"] / totals["count"]
+            average_scores.append(CategoryScore(category=category, score=average_score))
+        
+        return average_scores
          
     except Exception as e:
         print(f"Error occurred while retrieving vote of senator: {e}")
