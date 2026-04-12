@@ -17,9 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class scoreData(BaseModel):
-    category: str
-    score: float
 class SenatorData(BaseModel):
     state: str
     name: str
@@ -29,6 +26,16 @@ class SenatorData(BaseModel):
 class StateData(BaseModel):
     state: str
     senators: list[SenatorData]
+class scoreData(BaseModel):
+    category: str
+    score: float
+class SenatorData(BaseModel):
+    state: str #
+    name: str #
+    party: str #
+    overall_score: float
+    category_scores: list[scoreData]
+
 
 congress_key = os.getenv("CONGRESS_API_KEY")
 
@@ -42,20 +49,19 @@ def get_senators(state: str):
     overall_score: float
     category_scores: list[scoreData]
 
-
 #TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
 def get_senator(senator_name: str):
     senator_data = get_senator(name=senator_name)
     if senator_data is None:
         return {"message": f"Its fucked: {senator_name}"}
-
+    
     seniority = int(senator_data['seniority'])
     state = senator_data['state']
     category_scores = get_senator_score(state, seniority)
     if category_scores is None:
         return {"message": f"Its fucked: {senator_name}"}
-
+    
     s = SenatorData(
         state=state,
         name=senator_data['name'],
