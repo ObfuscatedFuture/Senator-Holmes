@@ -1,16 +1,16 @@
 from pydantic import BaseModel
 
+class CategoryScore(BaseModel):
+    category: str
+    score: float
+
 class Senator(BaseModel):
     state: str
-    seniority: int
     name: str
     party: str
     campaign_website: str
     promises: list[str]
-
-class CategoryScore(BaseModel):
-    category: str
-    score: float
+    category_scores: list[CategoryScore]
 
 class Bill(BaseModel):
     bill_id: int
