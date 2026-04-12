@@ -69,9 +69,8 @@ class CampaignScraper:
 
         return promises
 
-    def try_and_print_promises(self, url):
+    def find_promise_list(self, url):
         senator = self.scrape_promises_linked_pages(url)
         if len(senator) == 0:
              senator = self.scrape_promises_single_page(url)
-        for i in range(5): print(senator[i])
-        print("\n")
+        return senator
