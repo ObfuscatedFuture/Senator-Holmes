@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import os
 import random
 import requests
-from src.database.senator import get_senator, get_senator_score
+from src.database.senator import get_senator, get_senator_score, get_senator_by_name
 
 app = FastAPI()
 
@@ -62,7 +62,7 @@ def get_senators(state: str):
 
 # TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
-def get_senator_by_name(senator_name: str):
+def get_senator_controller(senator_name: str):
     senator_data = get_senator_by_name(name=senator_name)
     if senator_data is None:
         return {"message": f"Its fucked: {senator_name}"}

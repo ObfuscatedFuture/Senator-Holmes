@@ -36,14 +36,13 @@ async function loadSenatorDetails() {
     backToResultsLink.href = `results.html?state=${encodeURIComponent(state)}`;
 
     try {
-        const response = await fetch(`${API_BASE}/states/${encodeURIComponent(stateCode)}`);
+        const response = await fetch(`${API_BASE}/senators/${senatorName}`);
 
         if (!response.ok) {
             throw new Error("Could not load senator data.");
         }
 
-        const data = await response.json();
-        const senator = data.find((entry) => entry.name === senatorName);
+        const senator = await response.json();
 
         if (!senator) {
             senatorTitle.textContent = "Senator not found";
