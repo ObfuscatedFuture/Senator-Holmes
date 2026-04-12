@@ -1,14 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
-
-def find_promises_page(homeurl):
-    return f"{homeurl}/issues"
-    #
-    # with urlopen(request) as response:
-    #     soup = BeautifulSoup(response, "html.parser")
-    #     promise_heading = soup.body.find("h1", string=re.compile("Day One Promises"))
-
+from urllib.parse import urlparse
 
 class CampaignScraper:
 
@@ -33,11 +25,15 @@ class CampaignScraper:
         soup = self.construct_soup(url)
         promises = []
 
-        promises_html = soup.body.select("ol")
-        main_html = soup.body.select_one("header").find_next_sibling()
-        for promise in promises_html:
-            promises.append(promise.find("li").get_text())
-        for promise in main_html.find_all("p"):
+        list_html = soup.body.select("header + * ol,header + * ul")
+        if len(list_html) > 0:      # If the structure was li, don't add extraneous promises
+            for promise in list_html:
+                for x in promise.find_all("li"):
+                    promises.append(x.get_text())
+            return promises
+
+        p_html = soup.body.select("header + * p")
+        for promise in p_html:
             promises.append(promise.get_text())
 
         return promises
@@ -46,14 +42,29 @@ class CampaignScraper:
         """
         Scrapes campaign websites where each campaign promise is on a separate page, all linked from a page listing out titles
         for those promises
+
         :param overview: URL of the issues/campaign promises overview
-        :return:Complete list of strings each representing a campaign promise from the website
+        :return: Complete list of strings each representing a campaign promise from the website.
+        Empty list if this is an invalid way to get promises (the website does not display the information this way)
         """
         promises = []
         soup = self.construct_soup(overview)
 
         promises_html = soup.body.select("header + * a")
+        overview_hostname = urlparse(overview).hostname
+        if len(promises_html) < 5:
+            return []
         for link in promises_html:
-            promises.append(self.scrape_promise_single_page(link['href']))
+            if urlparse(link['href']).hostname != overview_hostname:
+                pass
+            subpage_link = self.scrape_promise_single_page(link['href'])
+            promises.append(subpage_link)
 
         return promises
+
+    def try_and_print_promises(self, url):
+        senator = self.scrape_promises_linked_pages(url)
+        if len(senator) == 0:
+             senator = self.scrape_promises_single_page(url)
+        for x in senator: print(x)
+        print("\n")
