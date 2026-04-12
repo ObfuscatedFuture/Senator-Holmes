@@ -40,9 +40,10 @@ class CampaignPromiseRetriever:
     
             Important rules:
             - Use only the campaign text provided.
-            - You may only make highly likely, well-supported inferences from the text.
+            - You may make highly likely, well-supported inferences from the text. 
+            - If a politician does not mention the category as the solution to a problem it mentions, assume that is a slightly disagree on that issue.
             - If a category is not clearly addressed, return 0.
-            - Output valid JSON only.
+            - Output valid JSON only. Output the categories below only. 
             - Do not include markdown.
             - For each category, include both a score and a short evidence statement quoting or paraphrasing the campaign promise.
             - Do NOT include categories that are scored a 0

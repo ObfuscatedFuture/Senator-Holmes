@@ -21,8 +21,8 @@ class CampaignScraper:
         """
 
         soup = self.construct_soup(url)
-        query = ", ".join([f"{header} + * p" for header in header_tags])
-        query += ", main p"
+        query = ", ".join([f"{header} ~ * p" for header in header_tags])
+        query += ", main p, [class*='container']:not(header) p"
         try:
             els = soup.body.select(query)
             if soup is None or els is None:
@@ -38,16 +38,20 @@ class CampaignScraper:
         soup = self.construct_soup(url)
         promises = []
 
-        list_html = soup.body.select("header + * ol,header + * ul, main ol, main ul")
-        if len(list_html) > 0:      # If the structure was li, don't add extraneous promises
-            for promise in list_html:
-                for x in promise.find_all("li"):
-                    promises.append(x.get_text())
-            return promises
-
-        p_html = soup.body.select("header + * p, main p")
+        p_html = soup.body.select("header ~ * p, main p, [class*='container']:not(header) p, h3 ~ p, h2 ~ p")
         for promise in p_html:
-            promises.append(promise.get_text())
+            if promise.get_text() != "":
+                promises.append(promise.get_text())
+
+        list_html = soup.body.select("header ~ * ol,header ~ * ul, main ol, main ul, [class*='container']:not(header) ul, [class*='container']:not(header) ol")
+
+        for promise in list_html:
+            for x in promise.find_all("li"):
+                if x.get_text() != "":
+                    promises.append(x.get_text())
+        return promises
+
+
 
         return promises
 
@@ -65,7 +69,7 @@ class CampaignScraper:
         promises = []
         soup = self.construct_soup(overview)
 
-        promises_html = soup.body.select("header + * a, div[class*='header'] + * a, main a")
+        promises_html = soup.body.select("header ~ * a, [class*='header'] ~ * a, main a, [class*='container']:not(header) a")
         overview_hostname = urlparse(overview).hostname
         overview_scheme = urlparse(overview).scheme # Should always be https
         if len(promises_html) < self.max_required_links:
@@ -81,12 +85,18 @@ class CampaignScraper:
             subpage_link = self.scrape_promise_single_page(link['href'])
             if subpage_link is None:
                 continue
+
             promises.append(subpage_link)
 
         return promises
 
+    min_promise_length = 20
+    blacklist = ["Click", "Link", "Privacy Policy"]
+
     def find_promise_list(self, url):
-        senator = self.scrape_promises_linked_pages(url)
-        if len(senator) == 0:
-             senator = self.scrape_promises_single_page(url)
+        return self.scrape_promises_linked_pages(url) + self.scrape_promises_single_page(url)
+
+        # post-processing
+        # senator = list(filter(lambda x: len(x) > self.min_promise_length and x not in self.blacklist, senator))
+
         return senator
