@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from src.database.senator import get_senator, get_senator_score
+
 
 app = FastAPI()
 
@@ -13,71 +15,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class InputData(BaseModel):
-    text: str
-
+class scoreData(BaseModel):
+    category: str
+    score: float
 class SenatorData(BaseModel):
-    state: str
-    name: str
-    party: str
-    image_url: str
-    trust_score: float
-class StateData(BaseModel):
-    state: str
-    senators: list[SenatorData]
+    state: str #
+    name: str #
+    party: str #
+    overall_score: float
+    category_scores: list[scoreData]
 
-
-@app.get("/state/{state}")
-def get_senators(state: str):
-
-    # { Example Response: 
-    #   "state": "Maryland",
-    #   "senators": [
-    #     {
-    #       "name": "Chris Van Hollen",
-    #       "party": "Democrat",
-    #       "image_url": "...",
-    #       "trust_score": 0.85
-    #     },
-    #     {
-    #        "name": "Ben Van Hollen",
-    #       "party": "Democrat",
-    #       "image_url": "...",
-    #       "trust_score": 0.69
-    #     }
-    #   ]
-    # }
-
-    StateData(
-        state=state,
-        senators=[
-            SenatorData(
-                name="Chris Van Hollen",
-                party="Democrat",
-                image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Chris_Van_Hollen%2C_official_portrait%2C_116th_Congress.jpg/330px-Chris_Van_Hollen%2C_official_portrait%2C_116th_Congress.jpg",
-                trust_score=0.85
-            ),
-            SenatorData(
-                name="Ben Van Hollen",
-                party="Democrat",
-                image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Chris_Van_Hollen%2C_official_portrait%2C_116th_Congress.jpg/330px-Chris_Van_Hollen%2C_official_portrait%2C_116th_Congress.jpg",
-                trust_score=0.69
-            )
-        ]
-    )
-    
-    return {"state": state, "message": "Here are the senators for this state"}
 
 #TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
 def get_senator(senator_name: str):
-    return {"senator_name": senator_name, "message": "Here is the information for this senator"}
+    senator_data = get_senator(name=senator_name)
+    if senator_data is None:
+        return {"message": f"Its fucked: {senator_name}"}
+    
+    seniority = int(senator_data['seniority'])
+    state = senator_data['state']
+    category_scores = get_senator_score(state, seniority)
+    if category_scores is None:
+        return {"message": f"Its fucked: {senator_name}"}
+    
+    s = SenatorData(
+        state=state,
+        name=senator_data['name'],
+        party=senator_data['party'],
+        overall_score=sum([score.score for score in category_scores]) / len(category_scores) if category_scores else 0.0,
+        category_scores=[scoreData(category=score.category, score=score.score) for score in category_scores]
+    )
 
-
-@app.post("/analyze")
-def analyze(data: InputData):
-    return {
-        "original_text": data.text,
-        "length": len(data.text),
-        "uppercase": data.text.upper()
-    }
+    return s
