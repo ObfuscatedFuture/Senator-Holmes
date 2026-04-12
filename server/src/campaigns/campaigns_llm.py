@@ -156,7 +156,6 @@ class CampaignPromiseRetriever:
 
     def validate_senator_classification(self, data):
         try:
-            print("Data", data)
             validated = SenatorClassification.model_validate_json(data)
             print("Valid JSON")
             print(validated.model_dump())

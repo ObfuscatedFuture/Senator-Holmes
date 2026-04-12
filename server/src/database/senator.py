@@ -5,7 +5,7 @@ from src.database.vote import get_senator_vote
 def create_senator(senator: Senator) -> int:
     senator_data = senator.model_dump(by_alias=True, exclude_none=True)
     senators_collection = get_collection("Senator")
-    try: 
+    try:
         if get_senator(senator.state, senator.seniority):
             print(f"Senator with state: {senator.state} and seniority: {senator.seniority} already exists.")
             return -1
@@ -27,7 +27,7 @@ def get_senator(state: str, seniority: int) -> Senator:
         print(f"Error occurred while retrieving senator: {e}")
         return None
 
-def get_senator(name: str) -> Senator:
+def get_senator_by_name(name: str) -> Senator:
     senators_collection = get_collection("Senator")
     try:
         senator = senators_collection.find_one({"name": name})

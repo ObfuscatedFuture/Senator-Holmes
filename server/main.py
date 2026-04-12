@@ -56,7 +56,7 @@ def get_senators(state: str):
 # TODO: Add the endpoint with more info (like per category scores)
 @app.get("/senators/{senator_name}")
 def get_senator_by_name(senator_name: str):
-    senator_data = get_senator(name=senator_name)
+    senator_data = get_senator_by_name(name=senator_name)
     if senator_data is None:
         return {"message": f"Its fucked: {senator_name}"}
 

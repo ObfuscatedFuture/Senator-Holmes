@@ -36,11 +36,11 @@ with open("data/119th_Congress_Senators_Campaigns.csv", mode='r', newline='') as
             campaign_website=row[3],
             promises=promise_list,
             category_scores=categories,
-            seniority=row[4]
+            seniority=int(row[4])
         )
 
         success = create_senator(new_senator)
-        break
+
 #
 # print("*****Dave McCormick's Promises******")
 # cs.try_and_print_promises("https://www.davemccormickpa.com/day-one-promises/")
