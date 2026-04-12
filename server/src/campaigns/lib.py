@@ -27,11 +27,11 @@ class CampaignScraper:
             els = soup.body.select(query)
             if soup is None or els is None:
                 print("Exiting early due to improper select: ", query)
-                return None
+                return []
             return "\n".join(map(lambda x: x.get_text(), els))
         except:
             print("Exception occurred with query", query)
-            return None
+            return []
 
 
     def scrape_promises_single_page(self, url):
@@ -83,7 +83,7 @@ class CampaignScraper:
             elif parsed.hostname != overview_hostname:
                 continue
             subpage_link = self.scrape_promise_single_page(link['href'])
-            if subpage_link is None:
+            if len(subpage_link) == 0:
                 continue
 
             promises.append(subpage_link)
