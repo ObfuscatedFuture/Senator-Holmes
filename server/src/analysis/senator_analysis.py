@@ -2,44 +2,69 @@ from fastapi import FastAPI
 import requests
 import os
 import xml.etree.ElementTree as ET
-from database.model import *
-from database.bills import *
-CONGRESS_API_KEY = os.getenv("CONGRESS_API_KEY")
-BASE_URL = "https://api.congress.gov/v3"
+from src.database.model import *
+from src.database.bills import *
 
-def get_senator_votes_from_bill(congress: int, bill_type: str, bill_number: int):
-    # step 1 - get the vote URL from bill actions
-    response = requests.get(
-        f"{BASE_URL}/bill/{congress}/{bill_type.lower()}/{bill_number}/actions",
-        params={"api_key": CONGRESS_API_KEY, "format": "json"}
-    )
-    actions = response.json()["actions"]
+LEGISCAN_API_KEY = os.getenv("LEGISCAN_API_KEY")
+LEGISCAN_BASE = "https://api.legiscan.com/"
+
+# Step 1 - get bill details (contains roll_call_ids)
+def get_bill(bill_id: int):
+    response = requests.get(LEGISCAN_BASE, params={
+        "key": LEGISCAN_API_KEY,
+        "op": "getBill",
+        "id": bill_id
+    })
+    return response.json()["bill"]
+
+# Step 2 - get roll call votes for a specific vote on the bill
+def get_roll_call(roll_call_id: int):
+    response = requests.get(LEGISCAN_BASE, params={
+        "key": LEGISCAN_API_KEY,
+        "op": "getRollCall",
+        "id": roll_call_id
+    })
+    print(response.json()["roll_call"])
+    return response.json()["roll_call"]
+
+# Step 3 - get person/senator details by people_id
+def get_person(people_id: int):
+    response = requests.get(LEGISCAN_BASE, params={
+        "key": LEGISCAN_API_KEY,
+        "op": "getPerson",
+        "id": people_id
+    })
+    return response.json()["person"]
+
+# All together - get every senator's vote for a bill
+def get_votes_for_bill(bill_id: int):
+    bill = get_bill(bill_id)
     
-    vote_url = None
-    for action in actions:
-        if "recordedVotes" in action:
-            for vote in action["recordedVotes"]:
-                if vote["chamber"] == "Senate":
-                    vote_url = vote["url"]
-                    break
+    results = []
 
-    if not vote_url:
-        return None
-
-    # step 2 - follow the URL to get individual senator votes
-    response = requests.get(vote_url)
-    root = ET.fromstring(response.text)
-
-    members = []
-    for member in root.findall(".//member"):
-        members.append({
-            "name": member.findtext("last_name") + ", " + member.findtext("first_name"),
-            "party": member.findtext("party"),
-            "state": member.findtext("state"),
-            "vote_cast": member.findtext("vote_cast")
-        })
+    # bill has a list of votes, each with a roll_call_id
+    for vote_summary in bill["votes"]:
+        roll_call_id = vote_summary["roll_call_id"]
+        roll_call = get_roll_call(roll_call_id)
+        
+        # roll_call has a list of individual votes
+        for vote in roll_call["votes"]:
+            people_id = vote["people_id"]
+            vote_value = vote["vote_id"]  # 1=Yea, 2=Nay, 3=Not Voting, 4=Absent
+            
+            person = get_person(people_id)
+            
+            results.append({
+                "name": person["name"],
+                "party": person["party"],
+                "state": person["state"],
+                "vote": vote["vote_text"],  # "Yea", "Nay", "Not Voting", "Absent"
+            })
     
-    return members
+    return results
 
-bill = get_bill(370)
+bill = get_bill(42)
+
+members = get_votes_for_bill(bill['bill_id'])
+print(members)
 
