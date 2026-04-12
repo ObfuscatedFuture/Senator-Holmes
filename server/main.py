@@ -30,12 +30,7 @@ class SenatorData(BaseModel):
     party: str  #
     overall_score: float
     category_scores: list[ScoreData]
-
-class StateData(BaseModel):
-    state: str
-    senators: list[SenatorData]
-
-
+    headshot: str
 
 
 congress_key = os.getenv("CONGRESS_API_KEY")
@@ -60,7 +55,7 @@ def get_senators(state: str):
         for senator in senators
     ]
 
-# TODO: Add the endpoint with more info (like per category scores)
+
 @app.get("/senators/{senator_name}")
 def get_senator_controller(senator_name: str):
     senator_data = get_senator_by_name(name=senator_name)
@@ -73,13 +68,21 @@ def get_senator_controller(senator_name: str):
     if category_scores is None:
         return {"message": f"Its mega fucked: {senator_name}"}
 
+    response = requests.get(
+        f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}"
+    )
+    members = response.json()["members"]
+    senators = [m for m in members if "district" not in m]
+    headshot = map(lambda x: x.depiction.imageUrl, filter(lambda x: x.name == senator_name, senators))[0]
+
     s = SenatorData(
         state=state,
         name=senator_data['name'],
         party=senator_data['party'],
         overall_score=sum([score.score for score in category_scores]) / len(
             category_scores) if category_scores else 0.0,
-        category_scores=[ScoreData(category=score.category, score=score.score) for score in category_scores]
+        category_scores=[ScoreData(category=score.category, score=score.score) for score in category_scores],
+        headshot=headshot
     )
 
     return s
