@@ -23,7 +23,7 @@ cs.try_and_print_promises("https://www.johncurtis.org/issues/")
 print("Gallego's Promises's*****")
 cs.try_and_print_promises("https://gallegoforarizona.com/issues/")
 ################
-cs.try_and_print_promises("https://www.davemccormickpa.com/issues/")
+
 
 cs.try_and_print_promises("https://berniemoreno.com/")
 
