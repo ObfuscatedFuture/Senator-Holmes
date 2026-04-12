@@ -1,17 +1,19 @@
-from lib import CampaignScraper
+from src.campaigns.lib import CampaignScraper
 import csv
 
-from server.src.campaigns.campaigns_llm import CampaignPromiseRetriever, validate_senator_classification
-from server.src.database.model import Senator, CategoryScore
-from server.src.database.senator import create_senator
+from src.campaigns.campaigns_llm import CampaignPromiseRetriever
+from src.database.model import Senator, CategoryScore
+from src.database.senator import create_senator
 
 cs = CampaignScraper()
 senators = []
 analyzer = CampaignPromiseRetriever()
 
-with open("119th_Congress_Senators_Campaigns.csv", mode='r', newline='') as file:
+with open("data/119th_Congress_Senators_Campaigns.csv", mode='r', newline='') as file:
     reader = csv.reader(file)
     for row in reader:
+        if reader.line_num == 1:
+            continue
         promise_list = cs.find_promise_list(row[3])
 
         json_from_llm = analyzer.llm_analysis(promise_list)
@@ -33,11 +35,12 @@ with open("119th_Congress_Senators_Campaigns.csv", mode='r', newline='') as file
             party=row[2],
             campaign_website=row[3],
             promises=promise_list,
-            category_scores=categories
+            category_scores=categories,
+            seniority=row[4]
         )
 
-        create_senator(new_senator)
-
+        success = create_senator(new_senator)
+        break
 #
 # print("*****Dave McCormick's Promises******")
 # cs.try_and_print_promises("https://www.davemccormickpa.com/day-one-promises/")

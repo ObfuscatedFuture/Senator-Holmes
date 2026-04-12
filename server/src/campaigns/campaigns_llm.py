@@ -7,6 +7,8 @@ from pydantic import BaseModel, ValidationError, ConfigDict
 from src.database.model import Senator, CategoryScore
 from src.database.senator import create_senator
 
+from src.analysis.llm_validation import ScoreEvidence
+
 # Initialize the client
 
 load_dotenv()
@@ -38,17 +40,17 @@ class CampaignPromiseRetriever:
     
             Important rules:
             - Use only the campaign text provided.
-            - Do not infer positions not supported by the text.
+            - You may only make highly likely, well-supported inferences from the text.
             - If a category is not clearly addressed, return 0.
             - Output valid JSON only.
             - Do not include markdown.
-            - For each category, include both a score and a short evidence statement quoting or paraphrasing the bill.
+            - For each category, include both a score and a short evidence statement quoting or paraphrasing the campaign promise.
             - Do NOT include categories that are scored a 0
             - Every campaign promise should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
     
             Return exactly this schema:
             {{
-            "bill_title": "string",
+            "senator_name": "string",
             "categories": {{
                 "abortion": {{
                 "score": 0
@@ -126,7 +128,7 @@ class CampaignPromiseRetriever:
             - vaccines_public_health_vs_health_skepticism: -2 = support vaccine skepticism / reduce mandates, 2 = support public health mandates and vaccine programs
             - immigration_border_wall_deportations: -2 = expand immigration access / reduce enforcement, 2 = increase wall, deportation, detention, or border enforcement
             - citizenship_pathways: -2 = restrict pathways to citizenship, 2 = expand pathways to citizenship
-            - foreign_aid_vs_isolationism: -2 = reduce foreign aid / isolationist, 2 = expand foreign aid / international engagement
+            - foreign_aid_vs_isolationism: -2 = reduce foreign aid / isolationist, 2 = expand foreign aid / international engagement / interventionism
             - israel_vs_palestine: -2 = more pro-Palestinian position, 2 = more pro-Israel position
             - same_sex_marriage: -2 = restrict same-sex marriage rights, 2 = protect or expand same-sex marriage rights
             - affirmative_action: -2 = restrict affirmative action, 2 = support or expand affirmative action
@@ -154,6 +156,7 @@ class CampaignPromiseRetriever:
 
     def validate_senator_classification(self, data):
         try:
+            print("Data", data)
             validated = SenatorClassification.model_validate_json(data)
             print("Valid JSON")
             print(validated.model_dump())
@@ -166,26 +169,26 @@ class CampaignPromiseRetriever:
 
 
 class Categories(BaseModel):
-    abortion: Optional[CategoryScore] = None
-    affirmative_action: Optional[CategoryScore] = None
-    balanced_budget_vs_expand_spending: Optional[CategoryScore] = None
-    citizenship_pathways: Optional[CategoryScore] = None
-    clean_energy_vs_fossil_fuels: Optional[CategoryScore] = None
-    corporate_tax_rates: Optional[CategoryScore] = None
-    crypto_gambling_corruption_regulation: Optional[CategoryScore] = None
-    executive_power_limits: Optional[CategoryScore] = None
-    foreign_aid_vs_isolationism: Optional[CategoryScore] = None
-    free_trade_vs_isolationism: Optional[CategoryScore] = None
-    gun_control: Optional[CategoryScore] = None
-    immigration_border_wall_deportations: Optional[CategoryScore] = None
-    israel_vs_palestine: Optional[CategoryScore] = None
-    medicaid_cuts_vs_expansion: Optional[CategoryScore] = None
-    minimum_wage: Optional[CategoryScore] = None
-    obamacare_repeal_vs_expansion: Optional[CategoryScore] = None
-    same_sex_marriage: Optional[CategoryScore] = None
-    stock_trading_restrictions: Optional[CategoryScore] = None
-    vaccines_public_health_vs_health_skepticism: Optional[CategoryScore] = None
-    voter_id_and_election_restrictions: Optional[CategoryScore] = None
+    abortion: Optional[ScoreEvidence] = None
+    affirmative_action: Optional[ScoreEvidence] = None
+    balanced_budget_vs_expand_spending: Optional[ScoreEvidence] = None
+    citizenship_pathways: Optional[ScoreEvidence] = None
+    clean_energy_vs_fossil_fuels: Optional[ScoreEvidence] = None
+    corporate_tax_rates: Optional[ScoreEvidence] = None
+    crypto_gambling_corruption_regulation: Optional[ScoreEvidence] = None
+    executive_power_limits: Optional[ScoreEvidence] = None
+    foreign_aid_vs_isolationism: Optional[ScoreEvidence] = None
+    free_trade_vs_isolationism: Optional[ScoreEvidence] = None
+    gun_control: Optional[ScoreEvidence] = None
+    immigration_border_wall_deportations: Optional[ScoreEvidence] = None
+    israel_vs_palestine: Optional[ScoreEvidence] = None
+    medicaid_cuts_vs_expansion: Optional[ScoreEvidence] = None
+    minimum_wage: Optional[ScoreEvidence] = None
+    obamacare_repeal_vs_expansion: Optional[ScoreEvidence] = None
+    same_sex_marriage: Optional[ScoreEvidence] = None
+    stock_trading_restrictions: Optional[ScoreEvidence] = None
+    vaccines_public_health_vs_health_skepticism: Optional[ScoreEvidence] = None
+    voter_id_and_election_restrictions: Optional[ScoreEvidence] = None
 
     model_config = ConfigDict(extra="forbid")
 
