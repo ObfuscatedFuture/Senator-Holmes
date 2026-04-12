@@ -54,8 +54,11 @@ def overall_score(senate_score, bill_score):
             print(bill_category)
             if category_score.category == bill_category.category:
                 overall_score += 4 - abs(category_score.score - bill_category.score)
-    overall_score = overall_score/(4* len(senate_score))
-    return overall_score
+    if len(senate_score) == 0:
+        return 0
+    else:
+        overall_score = overall_score/(4* len(senate_score))
+        return overall_score
 
 congress_key = os.getenv("CONGRESS_API_KEY")
 
