@@ -1,6 +1,6 @@
 State,Senator,Party,Campaign Website,Seniority
 Alabama,Tommy Tuberville,R,https://www.coachforgovernor.com/issues,1
-Alabama,Katie Britt,R,https://www.katiebrittforsenate.com/home#about,0
+Alabama,Katie Boyd Britt,R,https://www.katiebrittforsenate.com/home#about,0
 Alaska,Lisa Murkowski,R,https://lisamurkowski.com/issues/,1
 Alaska,Dan Sullivan,R,https://dansullivanforalaska.com/meet-dan/,0
 Arizona,Mark Kelly,D,https://www.markkelly.com/the-mission/,1
@@ -12,9 +12,9 @@ California,Adam Schiff,D,https://www.adamschiff.com/plans/,0
 Colorado,Michael Bennet,D,https://www.michaelbennet.com/priorities/,1
 Colorado,John Hickenlooper,D,https://hickenlooper.com/about/,0
 Connecticut,Richard Blumenthal,D,https://richardblumenthal.com/about/,1
-Connecticut,Chris Murphy,D,https://www.murphy.senate.gov/key-issues,0
-Delaware,Chris Coons,D,https://www.chriscoons.com/issues/,1
-Delaware,Lisa Blunt Rochester,D,https://lisabluntrochester.com/issues/,0
+Connecticut,Christopher Murphy,D,https://www.murphy.senate.gov/key-issues,0
+Delaware,Christopher Coons,D,https://www.chriscoons.com/issues/,1
+Delaware,Lisa Rochester,D,https://lisabluntrochester.com/issues/,0
 Florida,Ashley Moody,R,https://ashleymoody.com/about/,1
 Florida,Rick Scott,R,https://rescueamerica.com/12-point-plan/,0
 Georgia,Jon Ossoff,D,https://electjon.com/bio/,1
@@ -22,8 +22,8 @@ Georgia,Raphael Warnock,D,https://www.warnockforgeorgia.com/priorities/,0
 Hawaii,Brian Schatz,D,https://www.schatz.senate.gov/about/issues,1
 Hawaii,Mazie Hirono,D,https://www.mazieforhawaii.com/issues/,0
 Idaho,Mike Crapo,R,https://www.crapo.senate.gov/issues,1
-Idaho,Jim Risch,R,https://www.risch.senate.gov/about/issues-and-solutions/,0
-Illinois,Dick Durbin,D,https://www.durbin.senate.gov/issues/,1
+Idaho,James Risch,R,https://www.risch.senate.gov/about/issues-and-solutions/,0
+Illinois,Richard Durbin,D,https://www.durbin.senate.gov/issues/,1
 Illinois,Tammy Duckworth,D,https://tammyduckworth.com/meet-tammy/,0
 Indiana,Todd Young,R,https://www.toddyoung.org/issues/,1
 Indiana,Jim Banks,R,https://banksforsenate.com/issues/,0
@@ -40,7 +40,7 @@ Maine,Angus King,I,https://www.king.senate.gov/about/issues,0
 Maryland,Chris Van Hollen,D,https://www.vanhollen.org/issues/,1
 Maryland,Angela Alsobrooks,D,https://www.angelaalsobrooks.com/priorities,0
 Massachusetts,Elizabeth Warren,D,https://www.elizabethwarren.com/plans,1
-Massachusetts,Ed Markey,D,https://www.edmarkey.com/meet-ed/,0
+Massachusetts,Edward Markey,D,https://www.edmarkey.com/meet-ed/,0
 Michigan,Gary Peters,D,https://petersformichigan.com/on-the-issues/,1
 Michigan,Elissa Slotkin,D,https://www.elissaslotkin.org/priorities/,0
 Minnesota,Amy Klobuchar,D,https://www.klobuchar.senate.gov/public/index.cfm/issues,1
@@ -56,12 +56,12 @@ Nebraska,Pete Ricketts,R,https://petericketts.com/delivering-for-nebraska/,0
 Nevada,Catherine Cortez Masto,D,https://www.catherinecortezmasto.com/issues/,1
 Nevada,Jacky Rosen,D,https://www.rosenfornevada.com/issues/,0
 New Hampshire,Jeanne Shaheen,D,https://jeanneshaheen.org/about-jeanne/,1
-New Hampshire,Maggie Hassan,D,https://www.maggiehassan.com/issues/,0
+New Hampshire,Margaret Hassan,D,https://www.maggiehassan.com/issues/,0
 New Jersey,Cory Booker,D,https://corybooker.com/about-cory/,1
 New Jersey,Andy Kim,D,https://www.andykim.com/issues/,0
 New Mexico,Martin Heinrich,D,https://www.martinheinrich.com/issues/,1
-New Mexico,Ben Ray Luján,D,https://benraylujan.com/about/,0
-New York,Chuck Schumer,D,https://www.chuckschumer.com/about/,1
+New Mexico,Ben Lujan,D,https://benraylujan.com/about/,0
+New York,Charles Schumer,D,https://www.chuckschumer.com/about/,1
 New York,Kirsten Gillibrand,D,https://kirstengillibrand.com/about/,0
 North Carolina,Thom Tillis,R,https://www.tillis.senate.gov/about-thom,1
 North Carolina,Ted Budd,R,https://www.tedbudd.com/issues/,0
@@ -70,7 +70,7 @@ North Dakota,Kevin Cramer,R,https://www.kevincramer.org/issues/,0
 Ohio,Bernie Moreno,R,https://berniemoreno.com/about/,1
 Ohio,Jon Husted,R,https://www.husted.senate.gov/about/,0
 Oklahoma,James Lankford,R,https://www.jameslankford.com,1
-Oklahoma,Markwayne Mullin,R,https://mullinforamerica.com/issues/,0
+Oklahoma,Alan Armstrong,R,https://www.armstrong.senate.gov/,0
 Oregon,Ron Wyden,D,https://www.wyden.senate.gov/issues,1
 Oregon,Jeff Merkley,D,https://www.jeffmerkley.com/issues/,0
 Pennsylvania,John Fetterman,D,https://johnfetterman.com/issues/,1
@@ -87,14 +87,14 @@ Texas,John Cornyn,R,https://www.johncornyn.com/on-the-issues/,1
 Texas,Ted Cruz,R,https://www.tedcruz.org/meet-ted/,0
 Utah,Mike Lee,R,https://leeforsenate.com/results,1
 Utah,John Curtis,R,https://www.johncurtis.org/issues/,0
-Vermont,Bernie Sanders,I,https://berniesanders.com/about/,1
+Vermont,Bernard Sanders,I,https://berniesanders.com/about/,1
 Vermont,Peter Welch,D,https://www.welch.senate.gov/issues/,0
 Virginia,Mark Warner,D,https://www.markwarnerva.com/plan/,1
 Virginia,Tim Kaine,D,https://timkaine.com/issues/,0
 Washington,Patty Murray,D,https://pattymurray.com/bio/,1
 Washington,Maria Cantwell,D,https://www.cantwell.com/issues,0
-West Virginia,Shelley Moore Capito,R,https://www.capito.senate.gov/about/issues,1
-West Virginia,Jim Justice,R,https://www.justice.senate.gov/about/,0
+West Virginia,Shelley Capito,R,https://www.capito.senate.gov/about/issues,1
+West Virginia,James Justice,R,https://www.justice.senate.gov/about/,0
 Wisconsin,Ron Johnson,R,https://www.ronjohnsonforsenate.com/about-ron/,1
 Wisconsin,Tammy Baldwin,D,https://www.tammybaldwin.com/issues/,0
 Wyoming,John Barrasso,R,https://www.barrasso.senate.gov/about-john/,1
