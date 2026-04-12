@@ -31,49 +31,21 @@
             <section class="results-hero senator-hero">
                 <div class="senator-hero-copy">
                     <p class="eyebrow">Score breakdown</p>
-                    <h1 id="senatorTitle">Loading...</h1>
-                    <p id="senatorSubtitle" class="hero-text">Fetching senator score details.</p>
+                    <h1 id="senatorTitle"></h1>
+                    <p id="senatorSubtitle" class="hero-text"></p>
                 </div>
             </section>
         </header>
 
         <main class="results-main">
-            <section class="senator-detail-layout">
-                <article class="senator-profile-card">
-                    <div class="senator-profile-head">
-                        <img id="senatorHeadshot" class="senator-headshot senator-profile-image" src="assets/placeholder-headshot.svg" alt="Senator headshot">
-                        <div class="senator-profile-meta">
-                            <span class="detail-label">State</span>
-                            <strong id="senatorState" class="senator-profile-state">Loading...</strong>
-                            <p id="senatorBandDetail" class="score-description">Preparing score summary.</p>
-                        </div>
-                    </div>
-
-                    <div class="senator-score-stage">
-                        <div class="senator-score-wheel-wrap">
-                            <svg class="score-wheel" width="220" height="220" viewBox="0 0 220 220" aria-hidden="true">
-                                <circle class="wheel-bg senator-wheel-bg" cx="110" cy="110" r="85"></circle>
-                                <circle id="senatorWheelProgress" class="wheel-progress senator-wheel-progress" cx="110" cy="110" r="85"></circle>
-                            </svg>
-                            <div id="senatorWheelCenter" class="senator-wheel-center">0</div>
-                            <div id="senatorWheelLabel" class="senator-wheel-label">Trust score</div>
-                        </div>
-                    </div>
-                </article>
-
-                <section class="breakdown-panel">
-                    <div class="breakdown-grid" id="breakdownGrid"></div>
-                    <article class="methodology-note">
-                        <span class="detail-label">Interpretation note</span>
-                        <p id="methodologyCopy">
-                            This page summarizes the currently stored score and places it in context using the existing dataset.
-                        </p>
-                    </article>
-                </section>
+            <section class="results-section">
+                <div id="senatorCardHost" class="results-grid"></div>
             </section>
         </main>
     </div>
 
+    <script src="js/config.js"></script>
+    <script src="js/shared-utils.js"></script>
     <script src="js/senator.js"></script>
 </body>
 </html>

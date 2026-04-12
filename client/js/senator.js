@@ -1,185 +1,147 @@
+function createOverviewCard(text) {
+    const detailCard = document.createElement("div");
+    detailCard.className = "detail-card";
 
+    const detailLabel = document.createElement("span");
+    detailLabel.className = "detail-label";
+    detailLabel.textContent = "Score overview";
 
-function getScoreBand(score) {
-    if (score < 40) {
-        return {
-            label: "High concern",
-            detail: "This score falls in the lower range of the current dataset and signals a comparatively weak showing.",
-            color: "#c84b4b"
-        };
-    }
+    const description = document.createElement("p");
+    description.className = "score-description";
+    description.textContent = text;
 
-    if (score < 70) {
-        return {
-            label: "Mixed record",
-            detail: "This score sits in the middle band of the current dataset and suggests a more mixed profile.",
-            color: "#c98b29"
-        };
-    }
+    detailCard.appendChild(detailLabel);
+    detailCard.appendChild(description);
 
-    return {
-        label: "Stronger score",
-        detail: "This score lands in the upper range of the current dataset and compares favorably with most listed senators.",
-        color: "#2f8a57"
-    };
-}
-
-function animateScore(progressCircle, wheelCenter, finalScore, circumference) {
-    const duration = 1200;
-    const startTime = performance.now();
-
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const currentScore = Math.round(finalScore * easedProgress);
-        const offset = circumference - (currentScore / 100) * circumference;
-
-        progressCircle.style.strokeDashoffset = offset;
-        wheelCenter.textContent = currentScore;
-
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-
-    requestAnimationFrame(update);
-}
-
-function createBreakdownCard(label, value, description) {
-    const card = document.createElement("article");
-    card.className = "detail-card breakdown-card";
-
-    const labelEl = document.createElement("span");
-    labelEl.className = "detail-label";
-    labelEl.textContent = label;
-
-    const valueEl = document.createElement("strong");
-    valueEl.className = "detail-value breakdown-value";
-    valueEl.textContent = value;
-
-    const descriptionEl = document.createElement("p");
-    descriptionEl.className = "breakdown-description";
-    descriptionEl.textContent = description;
-
-    card.appendChild(labelEl);
-    card.appendChild(valueEl);
-    card.appendChild(descriptionEl);
-
-    return card;
+    return detailCard;
 }
 
 async function loadSenatorDetails() {
     const params = new URLSearchParams(window.location.search);
     const state = params.get("state");
     const senatorName = params.get("senator");
+    const stateCode = STATE_CODES[state];
 
     const senatorTitle = document.getElementById("senatorTitle");
     const senatorSubtitle = document.getElementById("senatorSubtitle");
-    const senatorState = document.getElementById("senatorState");
-    const senatorBandDetail = document.getElementById("senatorBandDetail");
     const backToResultsLink = document.getElementById("backToResultsLink");
-    const senatorHeadshot = document.getElementById("senatorHeadshot");
-    const wheelProgress = document.getElementById("senatorWheelProgress");
-    const wheelCenter = document.getElementById("senatorWheelCenter");
-    const wheelLabel = document.getElementById("senatorWheelLabel");
-    const breakdownGrid = document.getElementById("breakdownGrid");
-    const methodologyCopy = document.getElementById("methodologyCopy");
+    const senatorCardHost = document.getElementById("senatorCardHost");
 
-    if (!state || !senatorName) {
+    if (!state || !senatorName || !stateCode) {
         senatorTitle.textContent = "Senator not found";
         senatorSubtitle.textContent = "Return to the results page and select a senator name to view the score breakdown.";
-        senatorState.textContent = "Unavailable";
         return;
     }
 
     backToResultsLink.href = `results.html?state=${encodeURIComponent(state)}`;
 
     try {
-        const response = await fetch("data/senators.json");
+        const response = await fetch(`${API_BASE}/states/${encodeURIComponent(stateCode)}`);
 
         if (!response.ok) {
             throw new Error("Could not load senator data.");
         }
 
         const data = await response.json();
-        const allSenators = data.flatMap((entry) =>
-            entry.senators.map((senator) => ({
-                state: entry.state,
-                name: typeof senator === "string" ? senator : senator.name,
-                score: typeof senator === "string" ? 0 : senator.score
-            }))
-        );
-
-        const senator = allSenators.find((entry) => entry.state === state && entry.name === senatorName);
+        const senator = data.find((entry) => entry.name === senatorName);
 
         if (!senator) {
             senatorTitle.textContent = "Senator not found";
             senatorSubtitle.textContent = "The requested senator could not be matched to the current dataset.";
-            senatorState.textContent = state;
             return;
         }
 
-        const sortedScores = [...allSenators].sort((a, b) => b.score - a.score);
-        const rank = sortedScores.findIndex((entry) => entry.name === senator.name && entry.state === senator.state) + 1;
-        const percentile = Math.round(((allSenators.length - rank) / Math.max(allSenators.length - 1, 1)) * 100);
         const scoreBand = getScoreBand(senator.score);
-        const circumference = 2 * Math.PI * 85;
+        const radius = 50;
+        const circumference = 2 * Math.PI * radius;
 
         senatorTitle.textContent = senator.name;
         senatorSubtitle.textContent = `Detailed score context for ${senator.name} of ${senator.state}.`;
-        senatorState.textContent = senator.state;
-        senatorBandDetail.textContent = scoreBand.detail;
+        senatorCardHost.innerHTML = "";
 
-        const testImg = new Image();
-        testImg.onload = () => {
-            senatorHeadshot.src = headshotSrc;
-        };
-        testImg.src = headshotSrc;
+        const card = document.createElement("article");
+        card.className = "senator-card";
 
-        wheelProgress.style.stroke = scoreBand.color;
-        wheelProgress.style.strokeDasharray = String(circumference);
-        wheelProgress.style.strokeDashoffset = String(circumference);
-        wheelCenter.style.color = scoreBand.color;
-        wheelLabel.style.color = scoreBand.color;
+        const nameBlock = document.createElement("div");
+        nameBlock.className = "name-block";
 
-        breakdownGrid.innerHTML = "";
-        breakdownGrid.appendChild(
-            createBreakdownCard(
-                "Raw score",
-                `${senator.score}/100`,
-                "The stored trust score currently assigned to this senator."
-            )
-        );
-        breakdownGrid.appendChild(
-            createBreakdownCard(
-                "Score band",
-                scoreBand.label,
-                "A quick interpretation tier derived from the current score range."
-            )
-        );
-        breakdownGrid.appendChild(
-            createBreakdownCard(
-                "Dataset rank",
-                `#${rank} of ${allSenators.length}`,
-                "This ranking compares the score against every currently listed senator in the dataset."
-            )
-        );
-        breakdownGrid.appendChild(
-            createBreakdownCard(
-                "Relative position",
-                `${percentile}th percentile`,
-                "This percentile shows how high the score sits relative to the other listed entries."
-            )
-        );
+        const headshotImg = document.createElement("img");
+        headshotImg.src = senator["depiction"]?.["imageUrl"] || "assets/placeholder-headshot.svg";
+        headshotImg.alt = `${senator.name} headshot`;
+        headshotImg.className = "senator-headshot";
 
-        methodologyCopy.textContent = `This breakdown uses the current local dataset for context. The interpretation tier, rank, and percentile are derived from the stored score of ${senator.score} and may change as more senators or updated scores are added.`;
+        const nameText = document.createElement("div");
+        nameText.className = "senator-name";
+        nameText.textContent = senator.name;
 
-        animateScore(wheelProgress, wheelCenter, senator.score, circumference);
+        nameBlock.appendChild(headshotImg);
+        nameBlock.appendChild(nameText);
+
+        const scoreCopy = document.createElement("div");
+        scoreCopy.className = "score-copy";
+
+        const scoreLayout = document.createElement("div");
+        scoreLayout.className = "score-layout";
+
+        const wheelWrap = document.createElement("div");
+        wheelWrap.className = "wheel-wrap";
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("class", "score-wheel");
+        svg.setAttribute("width", "132");
+        svg.setAttribute("height", "132");
+        svg.setAttribute("viewBox", "0 0 132 132");
+
+        const bgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        bgCircle.setAttribute("class", "wheel-bg");
+        bgCircle.setAttribute("cx", "66");
+        bgCircle.setAttribute("cy", "66");
+        bgCircle.setAttribute("r", String(radius));
+
+        const progressCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        progressCircle.setAttribute("class", "wheel-progress");
+        progressCircle.setAttribute("cx", "66");
+        progressCircle.setAttribute("cy", "66");
+        progressCircle.setAttribute("r", String(radius));
+        progressCircle.style.stroke = scoreBand.color;
+        progressCircle.style.strokeDasharray = String(circumference);
+        progressCircle.style.strokeDashoffset = String(circumference);
+
+        svg.appendChild(bgCircle);
+        svg.appendChild(progressCircle);
+
+        const wheelCenter = document.createElement("div");
+        wheelCenter.className = "wheel-center";
+
+        const wheelCenterValue = document.createElement("span");
+        wheelCenterValue.textContent = "0";
+
+        const wheelCenterLabel = document.createElement("small");
+        wheelCenterLabel.textContent = "Trust score";
+
+        wheelCenter.appendChild(wheelCenterValue);
+        wheelCenter.appendChild(wheelCenterLabel);
+
+        wheelWrap.appendChild(svg);
+        wheelWrap.appendChild(wheelCenter);
+
+        const scoreDetails = document.createElement("div");
+        scoreDetails.className = "score-details is-single";
+        scoreDetails.appendChild(createOverviewCard(scoreBand.detail));
+
+        scoreLayout.appendChild(wheelWrap);
+        scoreLayout.appendChild(scoreDetails);
+
+        scoreCopy.appendChild(scoreLayout);
+
+        card.appendChild(nameBlock);
+        card.appendChild(scoreCopy);
+        senatorCardHost.appendChild(card);
+
+        animateScore(progressCircle, wheelCenterValue, senator.score, circumference);
     } catch (error) {
         senatorTitle.textContent = "Error loading senator";
         senatorSubtitle.textContent = "The score breakdown could not be loaded.";
-        senatorState.textContent = state;
         console.error(error);
     }
 }
