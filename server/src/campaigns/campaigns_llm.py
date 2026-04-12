@@ -171,10 +171,6 @@ class CampaignPromiseRetriever:
 
         return completion.choices[0].message.content
 
-CPR = CampaignPromiseRetriever()
-#TODO
-CPR.llm_analysis("Call from scraper")
-
 class CategoryScore(BaseModel):
     score: int = Field(..., ge=-2, le=2)
     evidence: Optional[str] = None
@@ -204,18 +200,6 @@ class Categories(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-# class CategoryScore(BaseModel):
-#     category: str
-#     score: float
-
-# class Senator(BaseModel):
-#     state: str
-#     name: str
-#     party: str
-#     campaign_website: str
-#     promises: list[str]
-#     category_scores: list[CategoryScore]
-
 class SenatorClassification(BaseModel):
     senator_name: str
     categories: Categories
@@ -235,11 +219,12 @@ def validate_senator_classification(data):
         #TODO: Rerun LLM and hope it works on the second time (if it fails again give up)
 
 
-BA = CampaignPromiseRetriever()
-campaign_promises = "TODO ADD CAMPAIGN PROMISES"
+CPR = CampaignPromiseRetriever()
+#TODO
+json_from_llm = CPR.llm_analysis("Call from scraper")
 
-json_from_llm = BA.llm_analysis(campaign_promises)
 validated_json = validate_senator_classification(json_from_llm)
+
 
 if validated_json is None:
     #print("Validation failed, skipping...")
@@ -282,5 +267,6 @@ with open("server/src/campaigns/119th_Congress_Senators_Campaigns.csv", newline=
                 category_scores=#TODO ADD CATEGORY SCORES
             )
         )
+
 
 
