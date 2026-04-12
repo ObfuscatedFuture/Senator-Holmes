@@ -1,16 +1,9 @@
-import csv
-from collections import defaultdict
-
-from pydantic import BaseModel, HttpUrl
-from typing import List
-
 import os
+from typing import Optional
+
 from dotenv import load_dotenv
 from openai import OpenAI
-from pydantic import json
-
-from typing import Optional
-from pydantic import BaseModel, Field, ValidationError, ConfigDict
+from pydantic import BaseModel, ValidationError, ConfigDict
 from src.database.model import Senator, CategoryScore
 from src.database.senator import create_senator
 
@@ -22,19 +15,6 @@ load_dotenv()
 openrouter_key = os.getenv("OPENROUTER_API_KEY")
 congress_key = os.getenv("CONGRESS_API_KEY")
 
-# class CategoryScore(BaseModel):
-#     category: str
-#     score: float
-
-# class Senator(BaseModel):
-#     state: str
-#     name: str
-#     party: str
-#     campaign_website: str
-#     promises: list[str]
-#     category_scores: list[CategoryScore]
-
-
 class CampaignPromiseRetriever:
     def __init__(self):
         print("Initializing OpenAI client with key:", openrouter_key)
@@ -45,8 +25,9 @@ class CampaignPromiseRetriever:
 
     def llm_analysis(self, campaign_promises):
         prompt = f"""
-            You are scoring the campaign promise websites of sitting U.S. senators in their first terms. 
-            Provide a JSON 
+            You are scoring the campaign promises from the websites of a sitting U.S. senator. 
+            
+            Your task is to classify each campaign promise across a predefined set of policy categories and assign a score for each category.
             
             Scoring rules:
             -2 = strongly favors the first side listed in the category definition
@@ -56,14 +37,14 @@ class CampaignPromiseRetriever:
             2 = strongly favors the second side
     
             Important rules:
-            - Use only the bill text provided.
+            - Use only the campaign text provided.
             - Do not infer positions not supported by the text.
             - If a category is not clearly addressed, return 0.
             - Output valid JSON only.
             - Do not include markdown.
             - For each category, include both a score and a short evidence statement quoting or paraphrasing the bill.
             - Do NOT include categories that are scored a 0
-            - Every bill should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
+            - Every campaign promise should be given the same score when evaluated multiple times, ie. ensure consistent scoring across runs
     
             Return exactly this schema:
             {{
@@ -171,9 +152,17 @@ class CampaignPromiseRetriever:
 
         return completion.choices[0].message.content
 
-class CategoryScore(BaseModel):
-    score: int = Field(..., ge=-2, le=2)
-    evidence: Optional[str] = None
+    def validate_senator_classification(self, data):
+        try:
+            validated = SenatorClassification.model_validate_json(data)
+            print("Valid JSON")
+            print(validated.model_dump())
+            return validated
+
+        except ValidationError as e:
+            print(e)
+            return None
+            # TODO: Rerun LLM and hope it works on the second time (if it fails again give up)
 
 
 class Categories(BaseModel):
@@ -200,73 +189,10 @@ class Categories(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+
 class SenatorClassification(BaseModel):
     senator_name: str
     categories: Categories
 
     model_config = ConfigDict(extra="forbid")
-
-def validate_senator_classification(data):
-    try:
-        validated = SenatorClassification.model_validate_json(data)
-        print("Valid JSON")
-        print(validated.model_dump())
-        return validated
-        
-    except ValidationError as e:
-        print(e)
-        return None
-        #TODO: Rerun LLM and hope it works on the second time (if it fails again give up)
-
-
-CPR = CampaignPromiseRetriever()
-#TODO
-json_from_llm = CPR.llm_analysis("Call from scraper")
-
-validated_json = validate_senator_classification(json_from_llm)
-
-
-if validated_json is None:
-    #print("Validation failed, skipping...")
-    #TODO: This should break so probably invert this if statement
-    pass
-
-# step 4 - save to database
-data = validated_json.model_dump()
-categories = [
-    CategoryScore(category=k, score=v["score"])
-    for k, v in data["categories"].items()
-    if v is not None and v["score"] != 0
-]
-
-new_senator = Senator(
-    state="TODO",
-    name=data["senator_name"],
-    party="TODO",
-    campaign_website="TODO",
-    promises=campaign_promises,
-    category_scores=categories
-    
-)
-
-create_senator(new_senator)
-
-states_dict = defaultdict(list)
-
-with open("server/src/campaigns/119th_Congress_Senators_Campaigns.csv", newline="") as f:
-    reader = csv.DictReader(f)
-    
-    for row in reader:
-        states_dict[row["State"]].append(
-            Senator(
-                state=row["State"],
-                name=row["Name"],
-                party=row["Party"],
-                campaign_website=row["Campaign Website"],
-                promises=#TODO ADD PROMISES
-                category_scores=#TODO ADD CATEGORY SCORES
-            )
-        )
-
-
 
