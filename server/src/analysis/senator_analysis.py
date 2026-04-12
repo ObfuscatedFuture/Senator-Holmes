@@ -1,18 +1,5 @@
-from fastapi import FastAPI
-import requests
-import os
-import xml.etree.ElementTree as ET
 from src.database.model import *
 from src.database.bills import *
-from dotenv import load_dotenv
-
-import requests
-import xml.etree.ElementTree as ET
-
-load_dotenv()
-
-LEGISCAN_API_KEY = os.getenv("LEGISCAN_API_KEY")
-LEGISCAN_BASE = "https://api.legiscan.com/"
 import requests
 import os
 from dotenv import load_dotenv

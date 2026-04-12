@@ -5,7 +5,7 @@ from src.database.bills import create_bill
 from src.database.model import Bill, CategoryScore
 from src.analysis.llm_validation import validate_bill_classification
 from src.analysis.llm import BillAnalyzer
-from src.analysis.senator_analysis import get_votes_for_bill, search_bill, get_bill
+from src.analysis.senator_analysis import get_rep_votes_for_bill, search_bill, get_bill
 
 app = FastAPI()
 
@@ -30,7 +30,7 @@ def get_bill_text_clean(congress: int, bill_type: str, bill_number: int):
     response = requests.get(htm_url)
     return response.text
 
-def get_congress_bills(congress: int = 119, limit: int = 500, offset: int = 500):
+def get_congress_bills(congress: int = 119, limit: int = 1, offset: int = 0):
     response = requests.get(
         f"{BASE_URL}/bill/{congress}",
         params={
@@ -58,7 +58,7 @@ for bill in bills:
     # format bill number for legiscan e.g. "S1", "HR42"
     legiscan_bill_number = f"{bill_type}{bill_number}"
     
-    senate_vote = get_votes_for_bill(legiscan_bill_number, chamber="S", state="US")
+    senate_vote = get_rep_votes_for_bill(legiscan_bill_number, state="US")
     
     if not senate_vote:
         print(f"No senate vote found for {legiscan_bill_number}, skipping...")
