@@ -14,7 +14,7 @@ def create_bill(bill: Bill) -> int:
         return -1
     return 0
 
-def get_bill(bill_id: int) -> Bill:
+def get_bill(bill_id: str) -> Bill:
     bill_collection = get_collection("Bill")
     try:
         bill = bill_collection.find_one({"bill_id": bill_id})

@@ -139,7 +139,6 @@ def get_rep_votes_for_bill(bill_title: str, state: str = "US"):
 bill_ids = get_all_bill_ids()
 for bill_id in bill_ids:
     senate_votes = get_rep_votes_for_bill(bill_id)
-    print(senate_votes)
     for senator in senate_votes["senators"]:
         name = senator.get("name")
         vote = senator.get("vote")

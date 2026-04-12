@@ -35,14 +35,14 @@ def get_senator_vote(state: str, seniority: int) -> list[CategoryScore]:
             print(f"No votes found with state: {state} and seniority: {seniority}")
             return None
         
+        category_totals: dict[str, dict[str, float]] = {}
+
         for vote in votes:
             vote_weight = vote.get("vote")
-            bill = get_bill(vote.get("bill_id"))
+            bill = get_bill(vote.get("bill_title"))
             if bill is None:
-                print(f"No bill found with bill_id: {vote.get('bill_id')}")
+                print(f"No bill found with bill_title: {vote.get('bill_title')}")
                 continue
-
-            category_totals: dict[str, dict[str, float]] = {}
 
             for category_score in bill.get("category_scores"):
                 category = category_score.get("category")
