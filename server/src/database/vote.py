@@ -1,6 +1,6 @@
-from src.database.db_connection import get_collection
-from src.database.model import Vote, CategoryScore
-from src.database.bills import get_bill
+from database.db_connection import get_collection
+from database.model import Vote, CategoryScore
+from database.bills import get_bill
 
 def create_vote(vote: Vote) -> int:
     vote_data = vote.model_dump(by_alias=True, exclude_none=True)

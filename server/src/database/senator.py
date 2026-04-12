@@ -1,6 +1,6 @@
-from src.database.db_connection import get_collection
-from src.database.model import Senator, CategoryScore
-from src.database.vote import get_senator_vote
+from database.db_connection import get_collection
+from database.model import Senator, CategoryScore
+from database.vote import get_senator_vote
 
 def create_senator(senator: Senator) -> int:
     senator_data = senator.model_dump(by_alias=True, exclude_none=True)

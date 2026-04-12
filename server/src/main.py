@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import os
 import random
 import requests
-from src.database.senator import get_senator, get_senator_score, get_senator_by_name
+from database.senator import get_senator, get_senator_score, get_senator_by_name
 
 app = FastAPI()
 
