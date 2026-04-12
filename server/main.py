@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 import os
+import random
 import requests
 from src.database.senator import get_senator, get_senator_score
 
@@ -39,17 +40,17 @@ class StateData(BaseModel):
 
 congress_key = os.getenv("CONGRESS_API_KEY")
 
-#TODO: This is slop response.json() returns a dict so .members doesnt work
-@app.get("/state/{state}")
+@app.get("/states/{state}")
 def get_senators(state: str):
     response = requests.get(
         f"https://api.congress.gov/v3/member/{state}?format=json&currentMember=true&api_key={congress_key}")
-    return response.json().members.filter(lambda rep: "district" in rep)
-    state: str  #
-    name: str  #
-    party: str  #
-    overall_score: float
-    category_scores: list[ScoreData]
+    members = response.json()['members']
+    senators = filter(lambda x:"district" not in x, members)
+    mapped = map(lambda x: {
+        **x,
+        'score': random.randint(1, 100)
+    }, senators)
+    return list(mapped)
 
 
 # TODO: Add the endpoint with more info (like per category scores)

@@ -25,5 +25,36 @@ def try_and_print_promises(url):
 print("****Lisa Blunt Rochester's Promises*****")
 try_and_print_promises("https://lisabluntrochester.com/issues")
 print("\n\n\n")
+###
+try_and_print_promises("https://www.angelaalsobrooks.com/priorities")
+
+try_and_print_promises("https://banksforsenate.com/issues/")
+
+try_and_print_promises("https://lisabluntrochester.com/issues/")
+
+try_and_print_promises("https://www.johncurtis.org/issues/")
 
 try_and_print_promises("https://gallegoforarizona.com/issues/")
+################
+try_and_print_promises("https://www.davemccormickpa.com/issues/")
+
+try_and_print_promises("https://berniemoreno.com/")
+
+try_and_print_promises("https://timformt.com/")
+
+try_and_print_promises("https://elissaslotkin.org/priorities/")
+
+try_and_print_promises("https://jimjusticewv.com/issues/")
+
+try_and_print_promises("https://www.jonhustedforsenate.com/")
+
+try_and_print_promises("https://ashleymoody.com/priorities/")
+
+try_and_print_promises("https://www.adamschiff.com/plans/")
+
+try_and_print_promises("https://www.andykim.com/issues/")
+
+
+
+
+
