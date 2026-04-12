@@ -25,3 +25,12 @@ def get_bill(bill_id: int) -> Bill:
     except Exception as e:
         print(f"Error occurred while retrieving bill: {e}")
         return None
+
+def get_all_bill_ids() -> list[str]:
+    bill_collection = get_collection("Bill")
+    try:
+        bills = bill_collection.find({}, {"bill_id": 1})
+        return [bill["bill_id"] for bill in bills if "bill_id" in bill]
+    except Exception as e:
+        print(f"Error occurred while retrieving bill IDs: {e}")
+        return []

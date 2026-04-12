@@ -1,5 +1,7 @@
-from src.database.model import *
-from src.database.bills import *
+from src.database.model import Vote
+from src.database.bills import get_all_bill_ids
+from src.database.senator import get_senator_by_name
+from src.database.vote import create_vote
 import requests
 import os
 from dotenv import load_dotenv
@@ -9,12 +11,12 @@ load_dotenv()
 LEGISCAN_API_KEY = os.getenv("LEGISCAN_API_KEY")
 LEGISCAN_BASE = "https://api.legiscan.com/"
 
-def search_bill(bill_number: str, state: str = "US"):
-    """Search for a bill by number and return the legiscan bill_id"""
+def search_bill(bill_title: str, state: str = "US"):
+    """Search for a bill by title and return the legiscan bill_id"""
     response = requests.get(LEGISCAN_BASE, params={
         "key": LEGISCAN_API_KEY,
         "op": "getSearch",
-        "query": bill_number,
+        "query": bill_title,
         "state": state
     })
     data = response.json()
@@ -23,12 +25,12 @@ def search_bill(bill_number: str, state: str = "US"):
     bills = [v for k, v in results.items() if k != "summary"]
 
     if not bills:
-        print(f"No bills found for {bill_number}")
+        print(f"No bills found for {bill_title}")
         return None
 
     # find exact match on bill number
     for bill in bills:
-        if bill.get("bill_number") == bill_number:
+        if bill.get("bill_number") == bill_title:
             return bill["bill_id"]
 
     # fallback to first result
@@ -84,14 +86,14 @@ def get_person(people_id: int):
     person_cache[people_id] = person  # cache it
     return person
 
-def get_rep_votes_for_bill(bill_number: str, state: str = "US"):
-    bill_id = search_bill(bill_number, state)
+def get_rep_votes_for_bill(bill_title: str, state: str = "US"):
+    bill_id = search_bill(bill_title, state)
     if not bill_id:
         return None
 
     bill = get_bill(bill_id)
     if not bill or not bill.get("votes"):
-        print(f"No votes found for {bill_number}")
+        print(f"No votes found for {bill_title}")
         return None
 
     senate_votes = []
@@ -127,10 +129,34 @@ def get_rep_votes_for_bill(bill_number: str, state: str = "US"):
         })
 
     if not senate_votes:
-        print(f"No senate votes found for {bill_number}")
+        print(f"No senate votes found for {bill_title}")
         return None
 
     # return only the most recent senate vote
     most_recent = sorted(senate_votes, key=lambda v: v["date"], reverse=True)[0]
     return most_recent
 
+bill_ids = get_all_bill_ids()
+for bill_id in bill_ids:
+    senate_votes = get_rep_votes_for_bill(bill_id)
+    print(senate_votes)
+    for senator in senate_votes["senators"]:
+        name = senator.get("name")
+        vote = senator.get("vote")
+        senator = get_senator_by_name(name)
+        if (senator is None):
+            continue
+        vote_score = 0
+        if (vote == "Absent" or vote == "Not Voting"):
+            continue
+        elif (vote == "Yea"):
+            vote_score = 1
+        elif (vote == "Nay"):
+            vote_score = -1
+        vote = Vote(
+            bill_title=bill_id,
+            state=senator.get("state"),
+            seniority=senator.get("seniority"),
+            vote=vote_score
+        )
+        create_vote(vote)

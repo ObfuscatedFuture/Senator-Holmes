@@ -5,12 +5,27 @@ from src.database.bills import get_bill
 def create_vote(vote: Vote) -> int:
     vote_data = vote.model_dump(by_alias=True, exclude_none=True)
     votes_collection = get_collection("Vote")
-    try: 
+    try:
+        if (get_senator_vote_on_bill(vote.state, vote.seniority, vote.bill_title) is not None):
+            print(f"Vote with state: {vote.state}, seniority: {vote.seniority} and bill_title: {vote.bill_title} already exists.")
+            return -1
         votes_collection.insert_one(vote_data)
     except Exception as e:
         print(f"Error occurred while inserting vote")
         return -1
     return 0
+
+def get_senator_vote_on_bill(state: str, seniority: int, bill_title: str) -> Vote:
+    votes_collection = get_collection("Vote")
+    try:
+        vote = votes_collection.find_one({"state": state, "seniority": seniority, "bill_title": bill_title})
+        if vote is None:
+            print(f"No vote found with state: {state}, seniority: {seniority} and bill_title: {bill_title}")
+            return None
+        return vote
+    except Exception as e:
+        print(f"Error occurred while retrieving vote: {e}")
+        return None
 
 def get_senator_vote(state: str, seniority: int) -> list[CategoryScore]:
     votes_collection = get_collection("Vote")

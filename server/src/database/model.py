@@ -14,7 +14,7 @@ class Senator(BaseModel):
     category_scores: list[CategoryScore]
 
 class Bill(BaseModel):
-    bill_id: int
+    bill_id: str
     title: str
     text: str
     category_scores: list[CategoryScore]

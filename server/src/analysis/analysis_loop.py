@@ -30,7 +30,7 @@ def get_bill_text_clean(congress: int, bill_type: str, bill_number: int):
     response = requests.get(htm_url)
     return response.text
 
-def get_congress_bills(congress: int = 119, limit: int = 14999, offset: int = 14751):
+def get_congress_bills(congress: int = 119, limit: int = 250, offset: int = 0):
     response = requests.get(
         f"{BASE_URL}/bill/{congress}",
         params={
@@ -46,10 +46,7 @@ BA = BillAnalyzer()
 
 response = get_congress_bills()
 bills = response['bills']
-i = 14751
 for bill in bills:
-    print(i)
-    i += 1
     bill_number = bill['number']
     bill_type = bill['type']
     bill_title = bill['title']
@@ -91,7 +88,7 @@ for bill in bills:
     ]
 
     new_bill = Bill(
-        bill_id=bill_number,
+        bill_id=legiscan_bill_number,
         title=bill_title,
         text=bill_text,
         category_scores=categories
