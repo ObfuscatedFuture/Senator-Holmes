@@ -65,13 +65,13 @@ def get_senators(state: str):
 def get_senator_controller(senator_name: str):
     senator_data = get_senator_by_name(name=senator_name)
     if senator_data is None:
-        return {"message": f"Its fucked: {senator_name}"}
+        return {"message": f"Its somewhat fucked: {senator_name}"}
 
     seniority = int(senator_data['seniority'])
     state = senator_data['state']
     category_scores = get_senator_score(state, seniority)
     if category_scores is None:
-        return {"message": f"Its fucked: {senator_name}"}
+        return {"message": f"Its mega fucked: {senator_name}"}
 
     s = SenatorData(
         state=state,
