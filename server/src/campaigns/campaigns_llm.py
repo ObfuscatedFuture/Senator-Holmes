@@ -4,10 +4,10 @@ from typing import Optional
 from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError, ConfigDict
-from src.database.model import Senator, CategoryScore
-from src.database.senator import create_senator
+from database.model import Senator, CategoryScore
+from database.senator import create_senator
 
-from src.analysis.llm_validation import ScoreEvidence
+from analysis.llm_validation import ScoreEvidence
 
 # Initialize the client
 

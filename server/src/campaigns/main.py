@@ -1,9 +1,9 @@
-from src.campaigns.lib import CampaignScraper
+from campaigns.lib import CampaignScraper
 import csv
 
-from src.campaigns.campaigns_llm import CampaignPromiseRetriever
-from src.database.model import Senator, CategoryScore
-from src.database.senator import create_senator
+from campaigns.campaigns_llm import CampaignPromiseRetriever
+from database.model import Senator, CategoryScore
+from database.senator import create_senator
 
 cs = CampaignScraper()
 senators = []
