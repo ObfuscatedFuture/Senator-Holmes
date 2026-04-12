@@ -34,7 +34,7 @@ print("Elissa Slotkin")
 cs.try_and_print_promises("https://elissaslotkin.org/priorities/")
 
 print("Jon Husted")
-cs.try_and_print_promises("https://www.jonhustedforsenate.com/")
+cs.try_and_print_promises("https://www.jonhustedforsenate.com/bio/")
 
 print("Ashley Moody")
 cs.try_and_print_promises("https://ashleymoody.com/priorities/")

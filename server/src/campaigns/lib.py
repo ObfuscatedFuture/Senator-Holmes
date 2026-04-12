@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
+header_tags = ["header", "div[class*=header]"]
+
 class CampaignScraper:
 
     def __init__(self):
@@ -18,7 +20,8 @@ class CampaignScraper:
         :return:
         """
         soup = self.construct_soup(url)
-        return "\n".join(map(lambda x: x.get_text(), soup.body.select("header + * p")))
+        query = ", ".join([f"{header} + * p" for header in header_tags])
+        return "\n".join(map(lambda x: x.get_text(), soup.body.select(query)))
 
 
     def scrape_promises_single_page(self, url):
@@ -50,12 +53,16 @@ class CampaignScraper:
         promises = []
         soup = self.construct_soup(overview)
 
-        promises_html = soup.body.select("header + * a")
+        promises_html = soup.body.select("header + * a, div[class*='header'] + * a")
         overview_hostname = urlparse(overview).hostname
+        overview_scheme = urlparse(overview).scheme # Should always be https
         if len(promises_html) < 5:
             return []
         for link in promises_html:
-            if urlparse(link['href']).hostname != overview_hostname:
+            parsed = urlparse(link['href'])
+            if parsed.scheme == "":
+                link['href'] = f'{overview_scheme}://{overview_hostname}{parsed.path}'
+            elif parsed.hostname != overview_hostname:
                 continue
             subpage_link = self.scrape_promise_single_page(link['href'])
             promises.append(subpage_link)
@@ -66,5 +73,5 @@ class CampaignScraper:
         senator = self.scrape_promises_linked_pages(url)
         if len(senator) == 0:
              senator = self.scrape_promises_single_page(url)
-        for x in senator: print(x)
+        for i in range(5): print(senator[i])
         print("\n")
